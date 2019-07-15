@@ -1,28 +1,52 @@
-function raySegment(r,k,lambda){
-    this.n = 1.0;//create ray in air for now 
-    this.r = r;//3D location
-    this.k = k;//3D propagation direction
-    this.prt = math.identity(3);//IdentityMatrix(3);
-    this.opl = 0;
-    this.s = 1;//fresnel coefficient for s-polarized light
-    this.p = 1;//fresnel coefficient for p-polarized light
-    this.flux = 1;//calculate absorbtion due to bbers law
-}
+//TODO ---- 
+//  organize into Ray file System File Trace File and Plot file
+//  Organize to run server side
+//  ability to use negative radius of curvature
+        // i.e. calculate intersection with the front or the back of the sphere
+//  ability to use 0 as curvature
+//  ability to relfect or refract
+//  OpticalSystem object type
 
-function surface(n1,n2,curv,r,k,id){
-    this.id = id;//unique identifier
-    this.n1 = n1;//incident material
-    this.n2 = n2;//substrat material
-    this.curv = curv;// 1/radius of curvature in mm
-    this.r = r;//three d location vector
-    this.k = k;//three d postion vector
-}
+//  ability to intercept function
+//  ability to plot function
+
+//  verify answers 
+
+//   Test --- Trace 1
+let trace = new Trace();
+let rayIn = new RaySegment([0,0,0],math.normalize([0,0.3,1]),[0,0,1],0,500,0);
+
+let surf1 = new Surface(1,1.75,1,[0,0,2],1,[0,0,1]);
+let surf2 = new Surface(1.75,1,1,[0,0,3],2,[0,0,1]);
+let surf3 = new Surface(1,1.75,1,[0,0,4],3,[0,0,1]);
+let surf4 = new Surface(1.75,1,0,[0,0,4],4,math.normalize([0,-0.6,1]));
+
+let opticalSystem = {1:surf1, 2:surf2, 3:surf3, 4:surf4}
+let raysOut = trace.traceSystem(rayIn,opticalSystem);
+
+/// create a new plot obj
+let plotSys = new SystemPlot(100,'systemPlot',500);
+plotSys.drawRayPath(raysOut.rayList);
+plotSys.drawHalfCircle(surf1.r[2],surf1.r[1],surf1.curv);
+plotSys.drawHalfCircle(surf2.r[2],surf2.r[1],surf2.curv);
+plotSys.drawHalfCircle(surf3.r[2],surf3.r[1],surf3.curv);
+plotSys.plotPlane(surf4.r,1,surf4.k)//center,semiDiam,eta
+
+//let draw = SVG('systemPlot').size(500,500);
+// drawRayPath(raysOut.rayList);
+// drawHalfCircle(surf1.r[2],surf1.r[1],surf1.curv);
+// drawHalfCircle(surf2.r[2],surf2.r[1],surf2.curv);
+// drawHalfCircle(surf3.r[2],surf3.r[1],surf3.curv);
 
 
-///// utility functions/////----------------------------------
 
-////// Fresnel --------------------
-function rs(n1,n2,theta){
+
+
+////// Optics Functions----MOVE TO RAY METHODS --------------------
+function Optics () { /*...*/ };
+
+Optics.prototype.rs = function(n1,n2,theta){
+
     let t1 = (n1*math.cos(theta));
     let t2 = ((n1/n2)*math.sin(theta))**2;
     let t3 = n2*math.sqrt(1-t2);
@@ -30,7 +54,8 @@ function rs(n1,n2,theta){
     return (t1-t3)/(t1+t3);
 }
 
-function rp(n1,n2,theta){
+Optics.prototype.rp = function(n1,n2,theta){
+
     let t1 = (n2*math.cos(theta));
     let t2 = ((n1/n2)*math.sin(theta))**2;
     let t3 = n1*math.sqrt(1-t2);
@@ -38,46 +63,31 @@ function rp(n1,n2,theta){
     return (t3-t1)/(t3+t1);
 }
 
-function AngleOfRefraction(n1, n2, thetai){
+Optics.prototype.angleOfRefraction = function(n1, n2, thetai){
     return math.asin((n1/n2)*math.sin(thetai))
 }
 
+let optics = new Optics();
 
-function SnellRefract(n1,n2,eta,k1){
-    let mu = (n1/n2);
-    let ni = math.dot(eta,k1);
-    let t1 = math.sqrt(1-((mu**2)*(1-ni)**2));
-    let k21 = math.multiply(t1,eta);
-    let k22Vec = math.subtract(k1,math.multiply(ni,eta));
-    let k22 = math.multiply(mu,k22Vec);
-    return math.add(k21,k22);
-}
+/*
+let ray1 = new RaySegment([0,0,0],[0,0,1],[0,0,1],1,500)
+let ray2 = new RaySegment([0,1,1],[0,0,1],[0,0,1],1,500)
+let ray3 = new RaySegment([0,0,3],[0,0,1],[0,0,1],1,500)
+let ray4 = new RaySegment([0,0,5],[0,0,1],[0,0,1],1,500)
+let rList = [ray1,ray2,ray3,ray4];
 
+let draw = SVG('systemPlot').size(500,500);
+drawRayPath(rList)
+drawCircle(5,0,2)
+*/
 
+/*
+<path
+    d="
+      M (CX - R), CY
+      a R,R 0 1,0 (R * 2),0
+      a R,R 0 1,0 -(R * 2),0
+    "
+/>
 
-function Rotation2D(theta){
-    const matrixList = [
-        [math.cos(theta),-1*math.sin(theta)],
-        [math.sin(theta),math.cos(theta)]
-    ];
-    return math.matrix(matrixList);
-}
-
-//this is not needed
-function IdentityMatrix(dim){
-    let matrix = [];
-    for(let i = 0; i<dim; i++){
-        //for each row
-        let row = [];
-        for(let j = 0; j<dim; j++){
-            //for each item
-            if(i==j){
-                row.push(1)
-            }else{
-                row.push(0)
-            }
-        }
-        matrix.push(row);
-    }
-    return math.matrix(matrix);
-}
+*/
