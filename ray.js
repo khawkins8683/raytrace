@@ -1,27 +1,28 @@
 ///SEGMENT ----------------------------------------------------------------
-
-function RaySegment(r,k,eta,opl,lambda,surfID){
+//todo set up defuatlts for eta opl, surfID,n and aoi
+function RaySegment(r,k,lambda,eta,opl,surfID,nObj,aoi){
+    //should probably add a unique id to each ray
     this.surfID = surfID;
     //this.n = n;//refractive index
     this.r = r;//3D location
     this.k = k;//3D propagation direction
     //this.prt = math.identity(3);//IdentityMatrix(3);
     this.opl = opl;//should probably be an input
-    //probably will make these methods
-    this.s = 1;//fresnel coefficient for s-polarized light
-    this.p = 1;//fresnel coefficient for p-polarized light
     this.flux = 1;//calculate absorbtion due to bbers law
     this.eta = eta;
     this.lambda = lambda;//nm
     //methods ray.rs ray.rp ray.PRT
+    this.n = nObj;
+    //this.n = {n1:n1,n2:n2};
+    this.aoi = aoi;
 }
 
 //we could get n1 from prvious ray, or from surface or store it in the ray object its self
-RaySegment.prototype.rs = function(n1,n2,theta){
+RaySegment.prototype.rs = function(){
 
-    let t1 = (n1*math.cos(theta));
-    let t2 = ((n1/n2)*math.sin(theta))**2;
-    let t3 = n2*math.sqrt(1-t2);
+    let t1 = (this.n.n1*math.cos(this.aoi));
+    let t2 = ((this.n.n1/this.n.n2)*math.sin(this.aoi))**2;
+    let t3 = this.n.n2*math.sqrt(1-t2);
 
     return (t1-t3)/(t1+t3);
 }
@@ -50,3 +51,14 @@ RayPath.prototype.OPLCumulative = function(){
     }
     return opl;
 }
+
+
+///// Ray Field 
+function RayField(pathList){
+    this.rayPaths = pathList;
+}
+//TODO - add field info
+    //image height
+    //obj distance
+    //obj height
+    //field angle
