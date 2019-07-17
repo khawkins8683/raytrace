@@ -1,4 +1,9 @@
 //TODO ---- 
+// AOI for anit-parallel surfaces -  retro reflection - issue
+// 
+
+//  plot retardance + diattenuation over fov
+//  plot fresnel coefficients
 //  organize into Ray file System File Trace File and Plot file
 //  Organize to run server side
 //  ability to use negative radius of curvature
@@ -10,7 +15,7 @@
 //  ability to intercept function surface
 //  ability to plot function
 
-//  verify answers 
+//  verify answers --- check sign convention for refractive index
 
 //   Test --- Trace 1
 let trace = new Trace();
@@ -53,17 +58,19 @@ console.log("p vector: ",math.multiply(testRay.PRT(),testRay.pIn ),  math.multip
 //polprops
 console.log("Diattenuation",testRay.diattenuation());
 console.log("Retardance", testRay.retardance());
+console.log("REFRction done \n\n");
 
 //Ray Trace #2 Reflection
 let rayIn = new RaySegment([0,0,0],math.normalize([0,0,1]),500,[0,0,1],0,0,{n1:1,n2:1},0);
 
 sd = 3;//semi diamtere
 type = "reflect";
-nGlass = 2.5;
+nAl = math.complex(0.81257, 6.0481);
 nAir = 1;
-let surfR1 = new Surface(nAir,nGlass,0,[0,0,2],1,math.normalize([0,1,1]),sd,type);
-let surfR2 = new Surface(nAir,nGlass,0,[0,-2,2],2,math.normalize([0,1,-1]),sd,type);
-let surfR3 = new Surface(nAir,nGlass,0,[0,-2,0],3,math.normalize([0,0,1]),sd,type);
+let surfR1 = new Surface(nAir,nAl,0,[0,0,2],1,math.normalize([0,1,1]),sd,type);
+let surfR2 = new Surface(nAir,nAl,0,[0,-2,2],2,math.normalize([0,1,-1]),sd,type);
+//detector surface
+let surfR3 = new Surface(nAir,nAir,0,[0,-2,0],3,math.normalize([0,0,-1]),sd,"refract");
 let opticalSystemR = new System( [surfR1,surfR2,surfR3] );
 let raysReflected = [trace.traceSystem(rayIn, opticalSystemR)];
 let rayFieldReflected = new RayField(raysReflected);
@@ -71,6 +78,20 @@ let rayFieldReflected = new RayField(raysReflected);
 /// create a new plot obj
 let plotSysR = new SystemPlot(70,'systemPlot2',300);
 plotSysR.SystemYPlot(rayFieldReflected, opticalSystemR);
+
+testRay = raysReflected[0].rayList[1];
+console.log("rs, rp",[testRay.rs(),  testRay.rp()]);
+console.log("Rs, Rp",[testRay.Rs(),  testRay.Rp()]);
+console.log("ts, tp",[testRay.ts(),  testRay.tp()]);
+console.log("Ts, Tp",[testRay.Ts(),  testRay.Tp()]);
+//test prt props
+console.log("K vector: ",math.multiply(testRay.PRT(),[0,0,1]),testRay.k);
+console.log("s vector: ",math.multiply(testRay.PRT(),testRay.sIn ),  math.multiply(testRay.sOutVector(), testRay.rs() ));
+console.log("p vector: ",math.multiply(testRay.PRT(),testRay.pIn ),  math.multiply(testRay.pOutVector(), testRay.rp() ));
+//polprops
+console.log("Diattenuation",testRay.diattenuation());
+console.log("Retardance", testRay.retardance());
+console.log("Reflection done \n\n");
 
 
 

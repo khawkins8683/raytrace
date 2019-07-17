@@ -3,7 +3,7 @@
 ///SEGMENT ------------------------------------------------------------------------------------------
 ///SEGMENT ------------------------------------------------------------------------------------------
 //todo set up defuatlts for eta opl, surfID,n and aoi
-function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nObj={n1:1,n2:1},aoi=0,type="refract"){
+function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],d=0,surfID=0,nObj={n1:1,n2:1},aoi=0,type="refract"){
     //should probably add a unique id to each ray
     this.surfID = surfID;
     //this.n = n;//refractive index
@@ -13,7 +13,7 @@ function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nO
     this.sIn = this.sOutVector();
     this.pIn = this.pOutVector();
 
-    this.opl = opl;//should probably be an input
+    this.d = d;//prop distance, not OPL!
     this.flux = 1;//calculate absorbtion due to bbers law
     
     this.lambda = lambda;//nm
@@ -23,23 +23,38 @@ function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nO
     this.aoi = aoi;
     this.type = type;//either reflect or refract
 }
-
+//OPL Calculation
+RaySegment.prototype.OPL = function(){
+    let n = this.n.n1;
+    //check for complex n
+    if(typeof n == "object"){
+        n = n.re;
+    }
+    return n*this.d;
+}
 //Fresnel Caclculus------------------------------------------------------------------------------------
 //TODO - these need to be made into complex friendly index functions
 //Coefficients
 RaySegment.prototype.cosTheta2 = function(){
-    return  math.sqrt(1 - ((this.n.n1 / this.n.n2) * math.sin(this.aoi))**2);
+    let nfactor = math.divide(this.n.n1 , this.n.n2);
+    let sin = math.sin(this.aoi);
+    let sinFactor = math.chain(nfactor).multiply(sin).pow(2).done();
+    return math.chain(1).subtract(sinFactor).sqrt().done();
 }
 //Reflection
 RaySegment.prototype.rs = function(){
-    let n1theta1 = this.n.n1*math.cos(this.aoi);
-    let n2theta2 = this.n.n2*this.cosTheta2();
-    return (n1theta1 - n2theta2)/(n1theta1 + n2theta2);
+    let n1theta1 = math.multiply(this.n.n1, math.cos(this.aoi));
+    let n2theta2 = math.multiply(this.n.n2, this.cosTheta2());
+    let num = math.subtract(n1theta1, n2theta2);
+    let denom = math.add(n1theta1, n2theta2);
+    return math.divide(num,denom);
 }
 RaySegment.prototype.rp = function(){
-    let n1theta2 = this.n.n1 * this.cosTheta2();
-    let n2theta1 = this.n.n2 * math.cos(this.aoi);
-    return (n1theta2 - n2theta1) / (n1theta2 + n2theta1);
+    let n1theta2 = math.multiply(this.n.n1 , this.cosTheta2());
+    let n2theta1 = math.multiply(this.n.n2 , math.cos(this.aoi));
+    let num = math.subtract(n1theta2 , n2theta1);
+    let denom = math.add(n1theta2 , n2theta1);
+    return math.divide(num,denom);
 }
 RaySegment.prototype.Rs = function(){
     return math.norm(this.rs())**2
@@ -49,15 +64,19 @@ RaySegment.prototype.Rp = function(){
 }
 //Transmission
 RaySegment.prototype.ts = function(){
-    let n1theta1 = this.n.n1*math.cos(this.aoi);
-    let n2theta2 = this.n.n2*this.cosTheta2();  
-    return (2 * n1theta1)/(n1theta1 + n2theta2);  
+    let n1theta1 = math.multiply(this.n.n1,math.cos(this.aoi));
+    let n2theta2 = math.multiply(this.n.n2,this.cosTheta2()); 
+    let num = math.multiply(2, n1theta1); 
+    let denom = math.add(n1theta1 , n2theta2);
+    return math.divide(num,denom);
 }
 RaySegment.prototype.tp = function(){
-    let n1theta1 = this.n.n1 * math.cos(this.aoi);
-    let n1theta2 = this.n.n1 * this.cosTheta2();
-    let n2theta1 = this.n.n2 * math.cos(this.aoi);
-    return (2*n1theta1) / (n1theta2 + n2theta1);
+    let n1theta1 = math.multiply(this.n.n1 , math.cos(this.aoi));
+    let n1theta2 = math.multiply(this.n.n1 , this.cosTheta2());
+    let n2theta1 = math.multiply(this.n.n2 , math.cos(this.aoi));
+    let num = math.multiply(2,n1theta1);
+    let denom = math.add(n1theta2 , n2theta1)
+    return math.divide(num,denom);//(2*n1theta1) / (n1theta2 + n2theta1);
 }
 RaySegment.prototype.transmissionFactor = function(){
     let nfactor = math.divide(this.n.n2,this.n.n1);
@@ -65,7 +84,7 @@ RaySegment.prototype.transmissionFactor = function(){
     return math.multiply(nfactor,cosfactor);
 }
 RaySegment.prototype.Ts = function(){
-    return 1 - this.Rs();
+    return 1 - this.Rs();//this is the easy way but for coatings we might need to use transmissionFactor
 }
 RaySegment.prototype.Tp = function(){
     return 1 - this.Rp();
@@ -78,11 +97,13 @@ RaySegment.prototype.kInVector = function(){
 RaySegment.prototype.sOutVector = function(){
     let len = math.chain(this.k).subtract(this.eta).norm().round(10).done();
     let sOut = [0,0,0];
-    if(len == 0){
+    if(len == 0||len==2){//check if parallel or anti parallel
         sOut = [1,0,0];//TODO ---- if k and eta are x than this is bad
     }else{
+        //console.log("in else");
         sOut = math.chain(this.k).cross(this.eta).normalize().done();
     }
+    //console.log("Constructing sOut, at surface"+this.surfID,"sOut",sOut);
     return sOut;
 }
 RaySegment.prototype.pOutVector = function(){
@@ -90,6 +111,9 @@ RaySegment.prototype.pOutVector = function(){
 }
 //for PRT -------------------------------------------------
 RaySegment.prototype.oOut = function(){
+    //console.log("Constructing oOut, at surface"+this.surfID,"sOut",this.sOutVector());
+    //console.log("Constructing oOut, at surface"+this.surfID,"pOut",this.pOutVector());
+    //console.log("Constructing oOut, at surface"+this.surfID,"kOut",this.k);
     return math.transpose([this.sOutVector(),this.pOutVector(),this.k]);
 }
 RaySegment.prototype.oInInverse = function(){
@@ -104,7 +128,10 @@ RaySegment.prototype.PRT = function(){
         coefs.s = this.ts();
         coefs.p = this.tp();       
     }
+    //console.log("constructing prt at surface "+this.surfID,"{s,p}",coefs);
     let jm3D = [[coefs.s,0,0], [0,coefs.p,0], [0,0,1]];
+    //console.log("constructing prt at surface "+this.surfID,"{oIn}", this.oInInverse());
+    //console.log("constructing prt at surface "+this.surfID,"{oOut}", this.oOut());
     return math.chain(this.oOut()).multiply(jm3D).multiply(this.oInInverse()).done();
 }
 ///Polarization properties ------------------------------------------
@@ -144,13 +171,22 @@ function RayPath(rayList){
     this.rayList = rayList;
 }
 
-RayPath.prototype.OPLCumulative = function(){
+RayPath.prototype.OPLTotal = function(){
     let rays = this.rayList;
     let opl = 0;
     for(let i=0; i<rays.length; i++){
-        opl += rays[i].opl;
+        opl += rays[i].OPL();
     }
     return opl;
+}
+RayPath.prototype.PRTTotal = function(){
+    let rays = this.rayList;
+    let prt = math.identity(3)._data;
+    for(let i=rays.length-1; i>=0; i--){
+        console.log("prt Total",prt,rays[i].PRT() );
+        prt = math.multiply(prt, rays[i].PRT());
+    } 
+    return prt;
 }
 
 

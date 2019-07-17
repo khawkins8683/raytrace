@@ -27,6 +27,7 @@ Trace.prototype.traceSurface = function(ray,surf){
     newRay.type = surf.type;
     newRay.surfID = surf.id;
     newRay.n = {n1: surf.n1, n2: surf.n2};
+    newRay.d = d;
 
     //now calculate newK 
     //switch here for reflect or refract surface
