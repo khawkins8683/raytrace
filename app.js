@@ -50,7 +50,9 @@ console.log("Ts 2, Tp 2",[testRay.transmissionFactor()*testRay.ts()**2,  testRay
 console.log("K vector: ",math.multiply(testRay.PRT(),[0,0,1]),testRay.k);
 console.log("s vector: ",math.multiply(testRay.PRT(),testRay.sIn ),  math.multiply(testRay.sOutVector(), testRay.ts() ));
 console.log("p vector: ",math.multiply(testRay.PRT(),testRay.pIn ),  math.multiply(testRay.pOutVector(), testRay.tp() ));
-
+//polprops
+console.log("Diattenuation",testRay.diattenuation());
+console.log("Retardance", testRay.retardance());
 
 //Ray Trace #2 Reflection
 let rayIn = new RaySegment([0,0,0],math.normalize([0,0,1]),500,[0,0,1],0,0,{n1:1,n2:1},0);

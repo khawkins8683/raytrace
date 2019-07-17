@@ -88,7 +88,7 @@ RaySegment.prototype.sOutVector = function(){
 RaySegment.prototype.pOutVector = function(){
     return math.cross(this.k, this.sOutVector() );
 }
-//for PRT
+//for PRT -------------------------------------------------
 RaySegment.prototype.oOut = function(){
     return math.transpose([this.sOutVector(),this.pOutVector(),this.k]);
 }
@@ -107,6 +107,35 @@ RaySegment.prototype.PRT = function(){
     let jm3D = [[coefs.s,0,0], [0,coefs.p,0], [0,0,1]];
     return math.chain(this.oOut()).multiply(jm3D).multiply(this.oInInverse()).done();
 }
+///Polarization properties ------------------------------------------
+RaySegment.prototype.retardance = function(){
+    let coefs = {};
+    if(this.type == "reflect"){
+        coefs.s = this.rs();
+        coefs.p = this.rp();
+    }else{
+        coefs.s = this.ts();
+        coefs.p = this.tp();       
+    }
+    //these are complex valued
+    //might need to take modulus - think
+    return math.arg(coefs.s) - math.arg(coefs.p);
+}
+RaySegment.prototype.diattenuation = function(){
+    let intensityCoefs = {};
+    if(this.type == "reflect"){
+        intensityCoefs.s = this.Rs();
+        intensityCoefs.p = this.Rp();
+    }else{
+        intensityCoefs.s = this.Ts();
+        intensityCoefs.p = this.Tp();       
+    }
+    //these are all real valued
+    return math.abs(intensityCoefs.s - intensityCoefs.p) / (intensityCoefs.s + intensityCoefs.p);
+}
+
+
+
 
 /// Ray Path ------------------------------------------------------------------------------------
 /// Ray Path ------------------------------------------------------------------------------------
