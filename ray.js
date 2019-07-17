@@ -3,7 +3,7 @@
 ///SEGMENT ------------------------------------------------------------------------------------------
 ///SEGMENT ------------------------------------------------------------------------------------------
 //todo set up defuatlts for eta opl, surfID,n and aoi
-function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nObj={n1:1,n2:1},aoi=0){
+function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nObj={n1:1,n2:1},aoi=0,type="refract"){
     //should probably add a unique id to each ray
     this.surfID = surfID;
     //this.n = n;//refractive index
@@ -13,7 +13,6 @@ function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nO
     this.sIn = this.sOutVector();
     this.pIn = this.pOutVector();
 
-    //this.prt = math.identity(3);//IdentityMatrix(3);
     this.opl = opl;//should probably be an input
     this.flux = 1;//calculate absorbtion due to bbers law
     
@@ -22,6 +21,7 @@ function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],opl=0,surfID=0,nO
     this.n = nObj;
     //this.n = {n1:n1,n2:n2};
     this.aoi = aoi;
+    this.type = type;//either reflect or refract
 }
 
 //Fresnel Caclculus------------------------------------------------------------------------------------
@@ -88,7 +88,25 @@ RaySegment.prototype.sOutVector = function(){
 RaySegment.prototype.pOutVector = function(){
     return math.cross(this.k, this.sOutVector() );
 }
-
+//for PRT
+RaySegment.prototype.oOut = function(){
+    return math.transpose([this.sOutVector(),this.pOutVector(),this.k]);
+}
+RaySegment.prototype.oInInverse = function(){
+    return [this.sIn,this.pIn,this.kInVector()];
+}
+RaySegment.prototype.PRT = function(){
+    let coefs = {};
+    if(this.type == "reflect"){
+        coefs.s = this.rs();
+        coefs.p = this.rp();
+    }else{
+        coefs.s = this.ts();
+        coefs.p = this.tp();       
+    }
+    let jm3D = [[coefs.s,0,0], [0,coefs.p,0], [0,0,1]];
+    return math.chain(this.oOut()).multiply(jm3D).multiply(this.oInInverse()).done();
+}
 
 /// Ray Path ------------------------------------------------------------------------------------
 /// Ray Path ------------------------------------------------------------------------------------

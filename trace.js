@@ -3,7 +3,9 @@
 function Trace(){};
 
 //Tracing functions
-//ToDO -- create ray and then replace values as we go -- cleaner
+//ToDO -- sign of curvature solve
+//  -- also slide back surface so that the vertex is not the center but the surface
+
 
 Trace.prototype.traceSurface = function(ray,surf){
 
@@ -22,6 +24,9 @@ Trace.prototype.traceSurface = function(ray,surf){
     //now make new ray segment -- with kIN to get the SIN and PIn vectors -- Important
     let newRay = new RaySegment(newR, ray.k, ray.lambda, eta);
     newRay.aoi = math.chain(eta).multiply(-1).vectorAngle(ray.k).done();
+    newRay.type = surf.type;
+    newRay.surfID = surf.id;
+    newRay.n = {n1: surf.n1, n2: surf.n2};
 
     //now calculate newK 
     //switch here for reflect or refract surface
@@ -33,33 +38,6 @@ Trace.prototype.traceSurface = function(ray,surf){
     
     return newRay;
 }
-// Trace.prototype.traceSurface = function(ray,surf){
-//     //find intercept distance 
-//     let d =0;
-//     let newR = [0,0,0];
-//     let eta = [0,0,1];
-//     let newK = [0,0,1];
-
-//     if(surf.curv==0){
-//         d = this.planeInterceptDistance(ray.k, ray.r, surf.r, surf.k);
-//         newR = math.add(ray.r,math.multiply(ray.k,d));
-//         eta = math.multiply(surf.k,-1);
-//     }else{
-//         d = this.sphereInterceptDistance(ray.k,ray.r,surf.r, 1/surf.curv);
-//         newR = math.add(ray.r,math.multiply(ray.k,d));
-//         eta = math.chain(surf.r).subtract( newR ).normalize().multiply(-1).done();
-//     }
-//     //switch here for reflect or refract surface
-//     if(surf.type == "refract"){
-//         newK = this.refract3D(surf.n1,surf.n2,eta,ray.k);
-//     }else{
-//         newK = this.reflect3D(eta, ray.k);
-//     }
-//     let aoi = math.chain(eta).multiply(-1).vectorAngle(ray.k).done();
-//     let newRay = new RaySegment(newR, newK, ray.lambda, eta, d*surf.n1, surf.id, {n1:surf.n1, n2:surf.n2}, aoi);
-//     return newRay;
-// }
-
 Trace.prototype.traceSystem = function(ray,system){
 
     let rayPath = [ray];
@@ -77,7 +55,6 @@ Trace.prototype.traceSystem = function(ray,system){
 
 
 //Utility functions
-
 //-----K vector-----
 Trace.prototype.refract3D = function(n1,n2,eta,kin){
     
