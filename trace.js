@@ -23,7 +23,8 @@ Trace.prototype.traceSurface = function(ray,surf){
 
     //now make new ray segment -- with kIN to get the SIN and PIn vectors -- Important
     let newRay = new RaySegment(newR, ray.k, ray.lambda, eta);
-    newRay.aoi = math.chain(eta).multiply(-1).vectorAngle(ray.k).done();
+    //this seems a little sketchy to me
+    newRay.aoi = math.chain(eta).multiply(-1).vectorAngle(ray.k).mod(math.PI/2).done();
     newRay.type = surf.type;
     newRay.surfID = surf.id;
     newRay.n = {n1: surf.n1, n2: surf.n2};

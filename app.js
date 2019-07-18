@@ -1,21 +1,29 @@
-//TODO ---- 
-// AOI for anit-parallel surfaces -  retro reflection - issue
-// 
-
-//  plot retardance + diattenuation over fov
-//  plot fresnel coefficients
-//  organize into Ray file System File Trace File and Plot file
-//  Organize to run server side
-//  ability to use negative radius of curvature
-        // i.e. calculate intersection with the front or the back of the sphere
+//TODO ---- DONE?
+// AOI for anit-parallel surfaces -  retro reflection - issue // think fix with mod pi/2
+// need more tests for q and prt surface and total -- but looking good 
 //  ability to use 0 as curvature
 //  ability to relfect or refract
 //  OpticalSystem object type
 
+//TODO ---- urgent
+//  diattenuation from PRT
+//  retardance from PRT
+//  Center the spherical surfaces at the vertex
+//  plot retardance + diattenuation over fov
+//  plot fresnel coefficients
+//      verify answers --- check sign convention for refractive index
+//  Organize to run server side
+//  ability to use negative radius of curvature
+        // i.e. calculate intersection with the front or the back of the sphere
 //  ability to intercept function surface
 //  ability to plot function
+//  rayField object -> obj rays have a Q matrix that will rotate back to normal jones coordinate systemfor ellipse plots
+//  double pole function
+// ray eField plot
+// system power
+// system ep
+// system exitp
 
-//  verify answers --- check sign convention for refractive index
 
 //   Test --- Trace 1
 let trace = new Trace();
@@ -67,8 +75,8 @@ sd = 3;//semi diamtere
 type = "reflect";
 nAl = math.complex(0.81257, 6.0481);
 nAir = 1;
-let surfR1 = new Surface(nAir,nAl,0,[0,0,2],1,math.normalize([0,1,1]),sd,type);
-let surfR2 = new Surface(nAir,nAl,0,[0,-2,2],2,math.normalize([0,1,-1]),sd,type);
+let surfR1 = new Surface(nAir,nAl,0,[0,0,2],1,math.normalize([0.1,1,1]),sd,type);
+let surfR2 = new Surface(nAir,nAl,0,[0,-2,2],2,math.normalize([0,1.1,-1]),sd,type);
 //detector surface
 let surfR3 = new Surface(nAir,nAir,0,[0,-2,0],3,math.normalize([0,0,-1]),sd,"refract");
 let opticalSystemR = new System( [surfR1,surfR2,surfR3] );
@@ -93,5 +101,18 @@ console.log("Diattenuation",testRay.diattenuation());
 console.log("Retardance", testRay.retardance());
 console.log("Reflection done \n\n");
 
+
+//Ellipse Plot Test
+let ellipsePlot = new SystemPlot(70,'systemPlot3',300);
+ellipsePlot.ellipse(math.multiply(raysReflected[0].jonesMatrix(),[1,1]),[1,1]);
+
+/*
+  <script src="http://mlweb.loria.fr/lalolib.js"></script>
+
+lab.do("X = rand(3,3)");	
+lab.do("svd(X)", function ( result ) {
+        console.log("The singular values are ",result); 
+});
+*/
 
 

@@ -3,7 +3,24 @@ function SystemPlot(scale,id,s){
     this.plotScaleFactor = scale;//100
     this.draw = SVG(id).size(s,s);
 }
-
+//Ellipses
+// ---- TODO - add arrow
+SystemPlot.prototype.ellipse = function(jonesVector,center=[0,0],steps=25){
+    let points = [];
+    let theta = 0;
+    for(let i=0; i<=25; i++){
+        let point = math.chain(jonesVector).multiply(math.exp(math.multiply(math.i,theta))).add(center).multiply(this.plotScaleFactor).done();
+        point.forEach((e,i) => {point[i]=e.re});
+        points.push(math.add(center,point));
+        theta += (2*math.PI/steps);
+    }
+    console.log("Calculated Ellipse pts",points);
+    this.draw.polyline(points)
+        .fill('none')
+        .stroke({ width: 1 })
+    return points;
+}
+// Layout ------------------------------------------------------------------
 SystemPlot.prototype.SystemYPlot = function(rayField,opticalSystem){
     //First start by plotting the surfaces
     //get the max off set

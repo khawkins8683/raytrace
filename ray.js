@@ -2,6 +2,8 @@
 ///SEGMENT ------------------------------------------------------------------------------------------
 ///SEGMENT ------------------------------------------------------------------------------------------
 ///SEGMENT ------------------------------------------------------------------------------------------
+/// We want the rayPath and possibly rayField to inherit diattenuation + retardance functions if possible
+
 //todo set up defuatlts for eta opl, surfID,n and aoi
 function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],d=0,surfID=0,nObj={n1:1,n2:1},aoi=0,type="refract"){
     //should probably add a unique id to each ray
@@ -134,6 +136,9 @@ RaySegment.prototype.PRT = function(){
     //console.log("constructing prt at surface "+this.surfID,"{oOut}", this.oOut());
     return math.chain(this.oOut()).multiply(jm3D).multiply(this.oInInverse()).done();
 }
+RaySegment.prototype.Q = function(){
+    return math.chain(this.oOut()).multiply(math.identity(3)._data).multiply(this.oInInverse()).done();
+}
 ///Polarization properties ------------------------------------------
 RaySegment.prototype.retardance = function(){
     let coefs = {};
@@ -183,10 +188,35 @@ RayPath.prototype.PRTTotal = function(){
     let rays = this.rayList;
     let prt = math.identity(3)._data;
     for(let i=rays.length-1; i>=0; i--){
-        console.log("prt Total",prt,rays[i].PRT() );
         prt = math.multiply(prt, rays[i].PRT());
     } 
     return prt;
+}
+RayPath.prototype.QTotal = function(){
+    let rays = this.rayList;
+    let q = math.identity(3)._data;
+    for(let i=rays.length-1; i>=0; i--){
+        q = math.multiply(q, rays[i].Q());
+    } 
+    return q;
+}
+RayPath.prototype.jonesMatrix = function(){
+    let jones3D = math.chain(this.QTotal()).inv().multiply(this.PRTTotal()).done();
+    //now take the first 4 elements
+    let jones = [jones3D[0].slice(0,2), jones3D[1].slice(0,2)];
+    return jones;
+}
+RayPath.prototype.retardance = function(){
+    //step 1 - convert to jm
+    let eigen = math.eigenValues2D(this.jonesMatrix());
+    return math.arg(eigen[0]) - math.arg(eigen[1]);
+}
+RayPath.prototype.diattenuation = function(){
+    //step 1 - convert to jm
+    let eigen = math.eigenValues2D(this.jonesMatrix());
+    let t1 = math.chain(eigen[0]).norm().pow(2).done();
+    let t2 = math.chain(eigen[1]).norm().pow(2).done();
+    return math.abs(t1-t2)/(t1+t2);
 }
 
 
