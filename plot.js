@@ -21,6 +21,28 @@ SystemPlot.prototype.ellipse = function(jonesVector,center=[0,0],steps=25){
     return points;
 }
 // Layout ------------------------------------------------------------------
+SystemPlot.prototype.plotRayGrid = function(rayGrid,offSet){
+    let grid = rayGrid.rayGridOut;
+    for(let i = 0; i<grid.length; i++){
+        for(let j = 0; j<grid[i].length; j++){
+            this.drawRayPath(grid[i][j].rayList ,offSet);
+        }
+    }
+}
+SystemPlot.prototype.SurfacesYPlot = function(opticalSystem){
+    //First start by plotting the surfaces
+    //get the max off set
+    let surfs = opticalSystem.surfaces;
+    let offSet = opticalSystem.maxSemiDiamter();
+    for(let i = 0; i<surfs.length; i++){
+        if(surfs[i].curv == 0){
+            this.plotPlane(surfs[i].r, surfs[i].semiDiameter,surfs[i].k, offSet);
+        }else{
+            this.drawHalfCircle(surfs[i].r, 1/surfs[i].curv, offSet);
+        }
+    }
+}    
+
 SystemPlot.prototype.SystemYPlot = function(rayField,opticalSystem){
     //First start by plotting the surfaces
     //get the max off set
@@ -85,4 +107,30 @@ SystemPlot.prototype.plotPlane = function(center,semiDiam,eta,offSet){
       .stroke({ color: '#f06', width: 4, linecap: 'round', linejoin: 'round' })
       //.move(0, offSet);
    
+}
+
+///// Using plotly.js
+DiattenuationMap = function(divID,rayGrid,surfaceID=1){
+    let valueGrid = [];
+    let valueRow = [];   
+    for(let i=0; i<rayGrid.rayGridOut.length; i++){
+        valueRow = [];
+        for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
+            //get the ray with the correct surfaceID
+            let ray = rayGrid.rayGridOut[i][j].getSurfaceRay(surfaceID);
+            valueRow.push(ray.diattenuation());
+        }
+        valueGrid.push(valueRow);    
+    }
+    let data = [{
+        z: valueGrid,
+        type: 'contour',
+        colorscale: 'Jet',
+      }];
+      
+    let layout = {
+        title: 'Colorscale for Contour Plot'
+      };
+      
+    Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    
 }

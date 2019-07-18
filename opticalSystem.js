@@ -3,7 +3,7 @@
 
 //------------------------------Surface --------------------------------------
 
-function Surface(n1,n2,curv,r,id,eta,sd,type){
+function Surface(n1,n2,curv,r,id,eta,sd,type,label=""){
     this.id = id;//unique identifier
     this.n1 = n1;//incident material
     this.n2 = n2;//substrat material
@@ -12,6 +12,7 @@ function Surface(n1,n2,curv,r,id,eta,sd,type){
     this.k = eta;//todo allow this to be off axis
     this.semiDiameter = sd;//only circular for now 
     this.type = type;//"reflect" or "refract"
+    this.label = label;
 }
 //Methods
     //surface power

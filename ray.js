@@ -165,7 +165,19 @@ RaySegment.prototype.diattenuation = function(){
     //these are all real valued
     return math.abs(intensityCoefs.s - intensityCoefs.p) / (intensityCoefs.s + intensityCoefs.p);
 }
-
+//Angles ---------------------
+RaySegment.prototype.xAngle = function(){
+    let x = math.sqrt(math.add(math.pow(this.k[1],2), math.pow(this.k[2],2) ));
+    return math.atan(math.divide(this.k[0],x));
+}
+RaySegment.prototype.yAngle = function(){
+    let x = math.sqrt(math.add(math.pow(this.k[2],2), math.pow(this.k[0],2) ));
+    return math.atan(math.divide(this.k[1],x));
+}
+RaySegment.prototype.zAngle = function(){
+    let x = math.sqrt(math.add(math.pow(this.k[0],2), math.pow(this.k[1],2) ));
+    return math.atan(math.divide(this.k[2],x));
+}
 
 
 
@@ -218,12 +230,74 @@ RayPath.prototype.diattenuation = function(){
     let t2 = math.chain(eigen[1]).norm().pow(2).done();
     return math.abs(t1-t2)/(t1+t2);
 }
+//// Selection
+RayPath.prototype.getSurfaceRay = function(id){
+    for(let i=0; i<this.rayList.length; i++){
+        if(this.rayList[i].surfID == id){
+            return this.rayList[i];
+        }
+    }
+}
+/////-------------RayGrid--------------
+//prototypes 
+function CollimatedWavefrontGrid(n,r,rayRChief=[0,0,0],rayK=[0,0,1],lambda=550){
+    
+    //make a circular ray grid centered around rayR
+    let rayGrid = [];
+    let rayRow = [];
+    let xl, yl = 0;
 
+    for(let x = 0; x<=n; x++){
+        rayRow = [];
+        xl = (x*(2*r)/n - r);
+        for(let y = 0; y<=n; y++){
+            yl = (y*(2*r)/n - r);
+            rayRow.push(new RaySegment([rayRChief[0]+xl,rayRChief[1]+yl,rayRChief[2]],rayK,lambda));
+        }
+        rayGrid.push(rayRow);
+    }
+    this.rayGridIn = rayGrid;
+    this.rayGridOut = [];
+}
+CollimatedWavefrontGrid.prototype.traceGrid = function(trace, sys){
+    let gridOut = [];
+    let rowOut = [];
+    for(let i=0; i<this.rayGridIn.length; i++){
+        rowOut = [];
+        for(let j=0; j<this.rayGridIn[i].length; j++){
+            rowOut.push(trace.traceSystem(this.rayGridIn[i][j],sys));
+        }
+        gridOut.push(rowOut);
+    }
+    this.rayGridOut = gridOut;
+}
+
+//CollimatedWavefront
+function CollimatedWavefront(n,r,rayRChief=[0,0,0],rayK=[0,0,1],lambda=550){
+    
+    //make a circular ray grid centered around rayR
+    let rayList = [];
+    let xl, yl = 0;
+
+    for(let x = 0; x<=n; x++){
+        xl = (x*(2*r)/n - r);
+        for(let y = 0; y<=n; y++){
+            yl = (y*(2*r)/n - r);
+            rayList.push(new RaySegment([rayRChief[0]+xl,rayRChief[1]+yl,rayRChief[2]],rayK,lambda));
+            /*if(math.norm([xl,yl])<=r){
+                rayList.push(new RaySegment([rayRChief[0]+xl,rayRChief[1]+yl,rayRChief[2]],rayK,lambda));
+            }*/
+        }
+    }
+    return rayList;
+}
 
 ///// Ray Field 
 function RayField(pathList){
     this.rayPaths = pathList;
 }
+//Add in some methods
+// like diattenuation map(surface as input)   (x,y,diatten)
 //TODO - add field info
     //image height
     //obj distance
