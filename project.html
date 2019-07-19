@@ -8,18 +8,55 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <!-- <link href="css/style.css" rel="stylesheet"> -->
+  <link href="./style.css" rel="stylesheet">
 </head>
 
 <body>
+        <header>
+                <hr>
+                <div>
+                    <h1>Polarization Ray Tracing - Example</h1>
+                    <nav>
+                        <ul>
+                            <li id="navaboutme"><a href="#gotoaboutme">System</a></li>
+                            <li id="navtravel"><a href="#gototravel">Algorithm</li>
+                            <li id="navprojects"><a href="#gotoprojects">Diattenuation</a></li>
+                            <li id="navresume"><a href="#gotoresume">Retardance</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <hr>
+            </header>  
+<div class="container">
   <p>Trace a Collimated beam through a plano convex lens and off of a fold mirror to a detector</p>
   <div id="systemPlot1"></div>
   <div id="systemPlot2"></div>
-  <div id="diatPlot1"></div>
-  <div id="diatPlot2"></div>
-  <div id="diatPlot3"></div>
-  
-  
+
+  <div class = "mapContainer">
+    <div id="diatPlot1"></div>
+    <div id="diatPlot2"></div>
+    <div id="diatPlot3"></div>
+  </div>
+
+  <div class = "mapContainer">
+    <div id="diatTotalPlot1"></div>
+    <div id="diatTotalPlot2"></div>
+    <div id="diatTotalPlot3"></div>
+  </div>
+
+  <div class = "mapContainer">
+    <div id="retPlot1"></div>
+    <div id="retPlot2"></div>
+    <div id="retPlot3"></div>
+  </div>
+
+  <div class = "mapContainer">
+    <div id="retTotalPlot1"></div>
+    <div id="retTotalPlot2"></div>
+    <div id="retTotalPlot3"></div>
+  </div>
+</div> 
+
   <script src="./SVG.js"></script>
   <script src="./math.js"></script>
   <script src="./math_extend.js"></script>

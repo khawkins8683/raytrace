@@ -25,9 +25,20 @@ math.quadraticFormula = function(a,b,c){
     let out2 = math.subtract(f,sqrt);
     return [out1,out2];
 }
+
 math.eigenValues2D = function(matrix){
     let a = -1;
     let b = math.add(matrix[0][0],matrix[1][1]);
     let c = math.subtract(math.multiply(matrix[0][1],matrix[1][0]),math.multiply(matrix[0][0],matrix[1][1]));
     return math.quadraticFormula(a,b,c);
+}
+math.eigenVectors2D = function(matrix){
+    let eValues = math.eigenValues2D(matrix);
+    let vectors = [];
+    for(let i =0; i<eValues.length; i++){
+        matrix[0][0] = matrix[0][0]-eValues[i];
+        matrix[1][1] = matrix[1][1]-eValues[i];
+        vectors.push(math.usolve(matrix,[0,0]));
+    }
+    return vectors;
 }

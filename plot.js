@@ -108,9 +108,15 @@ SystemPlot.prototype.plotPlane = function(center,semiDiam,eta,offSet){
       //.move(0, offSet);
    
 }
+//// MAPS ----------------------------------------------------
+//// MAPS ----------------------------------------------------
+//// MAPS ----------------------------------------------------
+//// MAPS ----------------------------------------------------
+//// MAPS ----------------------------------------------------
 
+//Diattenuation maps ------- 
 ///// Using plotly.js
-DiattenuationMap = function(divID,rayGrid,surfaceID=1){
+DiattenuationSurfaceMap = function(divID,rayGrid,surfaceID=1,title="Diattenuation Surface "+surfaceID){
     let valueGrid = [];
     let valueRow = [];   
     for(let i=0; i<rayGrid.rayGridOut.length; i++){
@@ -129,7 +135,84 @@ DiattenuationMap = function(divID,rayGrid,surfaceID=1){
       }];
       
     let layout = {
-        title: 'Colorscale for Contour Plot'
+        title: title
+      };
+      
+    Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    
+}
+///// Using plotly.js
+DiattenuationTotalMap = function(divID,rayGrid,surfaceID=1,title="Total Diattenuation Surf "+surfaceID){
+    let valueGrid = [];
+    let valueRow = [];   
+    for(let i=0; i<rayGrid.rayGridOut.length; i++){
+        valueRow = [];
+        for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
+            //get the ray with the correct surfaceID
+            let rayPath = rayGrid.rayGridOut[i][j];
+            valueRow.push(rayPath.diattenuation(surfaceID));
+        }
+        valueGrid.push(valueRow);    
+    }
+    let data = [{
+        z: valueGrid,
+        type: 'contour',
+        colorscale: 'Jet',
+      }];
+      
+    let layout = {
+        title: title
+      };
+      
+    Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    
+}
+
+//Retardance maps ------- 
+///// Using plotly.js
+RetardanceSurfaceMap = function(divID,rayGrid,surfaceID=1,title="Retardance Surface "+surfaceID){
+    let valueGrid = [];
+    let valueRow = [];   
+    for(let i=0; i<rayGrid.rayGridOut.length; i++){
+        valueRow = [];
+        for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
+            //get the ray with the correct surfaceID
+            let ray = rayGrid.rayGridOut[i][j].getSurfaceRay(surfaceID);
+            valueRow.push(ray.retardance());
+        }
+        valueGrid.push(valueRow);    
+    }
+    let data = [{
+        z: valueGrid,
+        type: 'contour',
+        colorscale: 'Jet',
+      }];
+      
+    let layout = {
+        title: title
+      };
+      
+    Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    
+}
+///// Using plotly.js
+RetardanceTotalMap = function(divID,rayGrid,surfaceID=1,title="Total Retardance Surf "+surfaceID){
+    let valueGrid = [];
+    let valueRow = [];   
+    for(let i=0; i<rayGrid.rayGridOut.length; i++){
+        valueRow = [];
+        for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
+            //get the ray with the correct surfaceID
+            let rayPath = rayGrid.rayGridOut[i][j];
+            valueRow.push(rayPath.retardance(surfaceID));
+        }
+        valueGrid.push(valueRow);    
+    }
+    let data = [{
+        z: valueGrid,
+        type: 'contour',
+        colorscale: 'Jet',
+      }];
+      
+    let layout = {
+        title: title
       };
       
     Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    

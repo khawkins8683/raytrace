@@ -1,0 +1,71 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+ul li{	
+	list-style-type: none;
+}
+a{
+	text-decoration: none;
+}
+a:hover{
+	font-weight: bold;
+	color: red;
+}
+
+body{
+    background-color: blue;
+}
+
+header{
+	opacity: 0.75;
+	position: fixed;
+	width: 100%;
+	z-index: 1;
+	top: 0px;
+	margin-top: 10px;
+}
+header div{
+	height: 75px;
+	background-color: black;
+	
+}
+header h1{
+	width: 40%;
+	float: left;
+	text-align: left;
+	padding-left: 2%;
+	line-height: 75px;
+    vertical-align: middle;
+    color: white;
+}
+header nav{
+	width: 50%;
+	float: right;
+	text-align: right;
+	padding-top: 20px;
+}
+header ul li{
+	display:inline;
+	padding-right: 10px; 
+}
+header a{
+	color: white;
+}
+
+.container{
+    width: 960px;
+    height: 100%;
+    margin: auto;
+    background-color: white;
+    padding-top: 200px;
+}
+
+.mapContainer {
+    display: flex;
+    width: 960px;
+    height: 370px;
+  }
+  .mapContainer > div {
+    flex: 1; /*grow*/
+  }

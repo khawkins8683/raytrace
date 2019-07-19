@@ -4,15 +4,18 @@
 //  ability to use 0 as curvature
 //  ability to relfect or refract
 //  OpticalSystem object type
-
-//TODO ---- urgent
 //  diattenuation from PRT
 //  retardance from PRT
-//  Center the spherical surfaces at the vertex
 //  plot retardance + diattenuation over fov
+
+//TODO ---- urgent
+//  2D eigen vector calculator
+// PRTCumulative(surfID)
+//  Center the spherical surfaces at the vertex
+
 //  plot fresnel coefficients
 //      verify answers --- check sign convention for refractive index
-//  Organize to run server side
+//  Organize to run server side/nodeJS
 //  ability to use negative radius of curvature
         // i.e. calculate intersection with the front or the back of the sphere
 //  ability to intercept function surface
@@ -57,26 +60,26 @@ let plotSys = new SystemPlot(70,'systemPlot1',300);
 plotSys.SystemYPlot(rayField, opticalSystem);
 
 
-//full field
-/*let raysIn = CollimatedWavefront(6,0.5,[0,0,0],[0,0,1],550);
-raysOut = [];
-for(let i =0; i<raysIn.length; i++){
-    raysOut.push(trace.traceSystem(raysIn[i], opticalSystem));
-}
-rayField = new RayField(raysOut);
-let testPath = raysOut[0];
-
-/// create a new plot obj
-let plotSys2 = new SystemPlot(70,'systemPlot2',300);
-plotSys2.SystemYPlot(rayField, opticalSystem);
-
-rayGrid = CollimatedWavefrontGrid(6,0.5,[0,0,0],[0,0,1],550);
-*/
-rayGrid = new CollimatedWavefrontGrid(6,0.5,[0,0,0],[0,0,1],550);
+rayGrid = new CollimatedWavefrontGrid(20,0.5,[0,0,0],[0,0,1],550);
 rayGrid.traceGrid(trace, opticalSystem);
+/*
 let plotSys2 = new SystemPlot(70,'systemPlot2',300);
 plotSys2.plotRayGrid(rayGrid, 1);
+*/
+console.log("ray trace Done --- plotting");
 
-DiattenuationMap("diatPlot1",rayGrid,1);
-DiattenuationMap("diatPlot2",rayGrid,2);
-DiattenuationMap("diatPlot3",rayGrid,3);
+DiattenuationSurfaceMap("diatPlot1",rayGrid,1);
+DiattenuationSurfaceMap("diatPlot2",rayGrid,2);
+DiattenuationSurfaceMap("diatPlot3",rayGrid,3);
+
+DiattenuationTotalMap("diatTotalPlot1",rayGrid,2);
+DiattenuationTotalMap("diatTotalPlot2",rayGrid,3);
+DiattenuationTotalMap("diatTotalPlot3",rayGrid,4);
+
+RetardanceSurfaceMap("retPlot1",rayGrid,1);
+RetardanceSurfaceMap("retPlot2",rayGrid,2);
+RetardanceSurfaceMap("retPlot3",rayGrid,3);
+
+RetardanceTotalMap("retTotalPlot1",rayGrid,2);
+RetardanceTotalMap("retTotalPlot2",rayGrid,3);
+RetardanceTotalMap("retTotalPlot3",rayGrid,4);

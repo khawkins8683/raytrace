@@ -179,8 +179,9 @@ RaySegment.prototype.zAngle = function(){
     return math.atan(math.divide(this.k[2],x));
 }
 
-
-
+/// Ray Path -----------------------------------------------------------------------------------------------------------
+/// Ray Path ---------------------------------------------------------------------------------------------------------------
+/// Ray Path -----------------------------------------------------------------------------------------------------
 /// Ray Path ------------------------------------------------------------------------------------
 /// Ray Path ------------------------------------------------------------------------------------
 /// Ray Path ------------------------------------------------------------------------------------
@@ -188,47 +189,51 @@ function RayPath(rayList){
     this.rayList = rayList;
 }
 
-RayPath.prototype.OPLTotal = function(){
+RayPath.prototype.OPLTotal = function(surfID=this.rayList.length){
     let rays = this.rayList;
     let opl = 0;
-    for(let i=0; i<rays.length; i++){
+    for(let i=0; i<surfID; i++){
         opl += rays[i].OPL();
     }
     return opl;
 }
-RayPath.prototype.PRTTotal = function(){
+RayPath.prototype.PRTTotal = function(surfID=this.rayList.length){
     let rays = this.rayList;
     let prt = math.identity(3)._data;
-    for(let i=rays.length-1; i>=0; i--){
+    for(let i=surfID-1; i>=0; i--){
         prt = math.multiply(prt, rays[i].PRT());
     } 
     return prt;
 }
-RayPath.prototype.QTotal = function(){
+RayPath.prototype.QTotal = function(surfID=this.rayList.length){
     let rays = this.rayList;
     let q = math.identity(3)._data;
-    for(let i=rays.length-1; i>=0; i--){
+    for(let i=surfID-1; i>=0; i--){
         q = math.multiply(q, rays[i].Q());
     } 
     return q;
 }
-RayPath.prototype.jonesMatrix = function(){
-    let jones3D = math.chain(this.QTotal()).inv().multiply(this.PRTTotal()).done();
+RayPath.prototype.jonesMatrix = function(surfID=this.rayList.length){
+    let jones3D = math.chain(this.QTotal(surfID)).inv().multiply(this.PRTTotal(surfID)).done();
     //now take the first 4 elements
     let jones = [jones3D[0].slice(0,2), jones3D[1].slice(0,2)];
     return jones;
 }
-RayPath.prototype.retardance = function(){
+RayPath.prototype.retardance = function(surfID=this.rayList.length){
     //step 1 - convert to jm
-    let eigen = math.eigenValues2D(this.jonesMatrix());
+    let eigen = math.eigenValues2D(this.jonesMatrix(surfID));
     return math.arg(eigen[0]) - math.arg(eigen[1]);
 }
-RayPath.prototype.diattenuation = function(){
+RayPath.prototype.diattenuation = function(surfID=this.rayList.length){
     //step 1 - convert to jm
-    let eigen = math.eigenValues2D(this.jonesMatrix());
+    //think about if we need transmission factor here
+    let eigen = math.eigenValues2D(this.jonesMatrix(surfID));
     let t1 = math.chain(eigen[0]).norm().pow(2).done();
     let t2 = math.chain(eigen[1]).norm().pow(2).done();
     return math.abs(t1-t2)/(t1+t2);
+}
+RayPath.prototype.eigenStates = function(surfID=this.rayList.length){
+    return math.eigenVectors2D(this.jonesMatrix(surfID));
 }
 //// Selection
 RayPath.prototype.getSurfaceRay = function(id){
@@ -238,7 +243,11 @@ RayPath.prototype.getSurfaceRay = function(id){
         }
     }
 }
-/////-------------RayGrid--------------
+/////-------------RayGrid------------------------------------------------------------------------------------
+/////-------------RayGrid------------------------------------------------------------------------------------
+/////-------------RayGrid------------------------------------------------------------------------------------
+/////-------------RayGrid------------------------------------------------------------------------------------
+/////-------------RayGrid------------------------------------------------------------------------------------
 //prototypes 
 function CollimatedWavefrontGrid(n,r,rayRChief=[0,0,0],rayK=[0,0,1],lambda=550){
     
@@ -270,26 +279,6 @@ CollimatedWavefrontGrid.prototype.traceGrid = function(trace, sys){
         gridOut.push(rowOut);
     }
     this.rayGridOut = gridOut;
-}
-
-//CollimatedWavefront
-function CollimatedWavefront(n,r,rayRChief=[0,0,0],rayK=[0,0,1],lambda=550){
-    
-    //make a circular ray grid centered around rayR
-    let rayList = [];
-    let xl, yl = 0;
-
-    for(let x = 0; x<=n; x++){
-        xl = (x*(2*r)/n - r);
-        for(let y = 0; y<=n; y++){
-            yl = (y*(2*r)/n - r);
-            rayList.push(new RaySegment([rayRChief[0]+xl,rayRChief[1]+yl,rayRChief[2]],rayK,lambda));
-            /*if(math.norm([xl,yl])<=r){
-                rayList.push(new RaySegment([rayRChief[0]+xl,rayRChief[1]+yl,rayRChief[2]],rayK,lambda));
-            }*/
-        }
-    }
-    return rayList;
 }
 
 ///// Ray Field 
