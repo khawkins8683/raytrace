@@ -19,7 +19,7 @@
           TeX: { extensions: ["color.js"]}
       });
   </script>
-  <link href="./style.css" rel="stylesheet">
+  <link href="./css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -39,27 +39,140 @@
                 <hr>
             </header>  
 <div class="container">
+<div id="overviewContainer">
+    <h1>Overview</h1>
+    <img src="./Images/polarizedLight.png">
+    <div class="textContainer">
+        <p>Typically when dealling designing optical systems, 
+            engineers rely on ray tracing to calculate the paths and phases of light inside of a system.
+            This method ignores much of the wave nature of the light except for the frequency or wavelength properties.
+            Polarization ray tracing aims to extend these methods by also including the effects of the waves geometry (Polarization), by the optical system.
+            This example will go throught the methodology and importance of Polarization in optical design.
+        </p>
+    </div>
+</div>
 
-        <p>
-            When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
-            $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
-            $$\begin{pmatrix}a & b\\\ c & d\end{pmatrix}$$
-            $$\begin{pmatrix}J1 & J2\\J3 & j4\end{pmatrix}$$
-        <p>
-
+<div id="jonesContainer">
+        <h1>Jones Matrix Calculus</h1>
+        <div class="textContainer">
+            <p>We think that the concept of polarized light was first observed in 1669 (Erasmus Bartholinus, Dutch) by viewing double refraction through calcite crystal.
+                For the next 200 + years much more observations and mathematical descriptions of polarized light were made (Malus Law ~1808, Fresnel Coeffiecients ~1830),
+                but it was not until 1941, that a rigorus description of the pheomina was concieved by R.C. Jones.  The American born physicist, methodology (now know as Jones Calculs),describes Polarized light with a complex two dimensional "Jones" vector, and describes the optical interaction of polarized light with optical componets using a complex 2 by 2 Jones Matrix.
+            </p>
+        </div>
+        <div class ="equtionContainer">
+            <p>
+                $$Jones Vector \begin{pmatrix}J_{x}\\J_{y}\end{pmatrix}$$
+                $$Jones Matrix \begin{pmatrix}J_{xx} & J_{yx} \\J_{xy} & J_{yy} \end{pmatrix}$$
+                $$Polarized Interaction \begin{pmatrix}J_{xx} & J_{yx} \\J_{xy} & J_{yy} \end{pmatrix} \cdot \begin{pmatrix}J_{x_{in}}\\J_{y_{in}}\end{pmatrix} = \begin{pmatrix}J_{x_{out}}\\J_{y_{out}}\end{pmatrix}$$
+            </p>
+        </div>
+        <div class ="equtionContainer">
+            <p>
+            This calculus describes fully polarized coherent light and how its interactions. Jones vectors describe the electric field amplitude and phase.  A little later on (1943), Hans Mueller, developed an overlapping calculus to describe incoherent interactions in terms of intensities.
+            Though both methods should be used to get the complete polarization picture, we will focus on extending the Jones Calculus methods, so that they can be used durring ray tracing.
+            </p>
+        </div>
+</div>
+<div id="fresnelContainer">
   <h1>Fresnel Aberrations</h1>
-  <div id="airGlassPlot"></div>
-  <div id="airAlPlot"></div>
+  <div class="textContainer">
+      <p>
+      The amount of light that reflects and refracts off of an optical interface, depends on the incident polarization and can be calculated using the Fresnel Equations (~1830, Augustin-Jean Fresnel, French).  
+      The equations divide the incident wave into two componets, call S and P polarizations.  Where the S, polarized direction is perpendicular to the plane of refraction, and the p state is parallel to the plane of refraction.
+      </p>
+  </div>
+  <img src="./Images/sandp.jpg">
+  <div class="textContainer">
+        <p>
+        These equations only depend on the incident ray angle and the refractive index on either side of the interface.  All of these values are readily available durring a ray trace.
+        </p>
+  </div>
+  <div class ="equtionContainer">
+        <p>
+            $$ r_{s} = {n_{1} Cos\theta_{i} - n_{2} Cos\theta_{t} \over n_{1} Cos\theta_{i} + n_{2} Cos\theta_{t}} $$
+            $$ r_{p} = {n_{2} Cos\theta_{i} - n_{1} Cos\theta_{t} \over n_{2} Cos\theta_{i} + n_{1} Cos\theta_{t}} $$
+            $$ t_{s} = {2 n_{1} Cos\theta_{i} \over n_{1} Cos\theta_{i} + n_{2} Cos\theta_{t}} $$
+            $$ t_{p} = {2 n_{1} Cos\theta_{i} \over n_{2} Cos\theta_{i} + n_{1} Cos\theta_{t}} $$
+        </p>
+  </div>
+  <div class="textContainer">
+        <p>
+        Commonly, in optical systems there are air-glass interactions for refractive (lens) surfaces and air-aluminum interactions for reflective (mirror) surfaces.  The corresponding Fresnel Coefficients as a function of the angle of incidence (AOI) are plotted bellow.
+        </p>
+  </div>
+  <div class = "fresnelPlotContainer">
+    <div id="airGlassPlot" ></div>
+    <div id="airAlPlot" ></div>
+  </div> 
+  <div class="textContainer">
+        <p>
+        The Fresnel coefficients can be combined with the Jones calculus to create a description for how an optical surface in an optical system will effect the polarization of the light propagating through the system.
+        </p>
+  </div>
+  <div class ="equtionContainer">
+        <p>
+            $$JonesMatrix_{trans}= \begin{pmatrix}t_{s} & 0 \\0 & t_{p} \end{pmatrix}$$
+            $$JonesMatrix_{refl} = \begin{pmatrix}r_{s} & 0 \\0 & -1 \times r_{p} \end{pmatrix}$$
+        </p>
+  </div>
+  <div class="textContainer">
+        <p>
+        Though these Jones matricies will describe the optical polarization effects, they are somewhat limited in their applications to Polarized Ray tracing.  This is because the Jones vector describes the electric field in terms of an x and y component.  This has the implicit assumption that the light is propagating the the z-direction.  
+        Since one of the main goals of ray tracing is to calculate the change in propagation direction due to optical interactions, this formalation is clearly inadiquate.  To apply this methodoly to three-D ray tracing, one must extend the Jones matrix into a three-D version.
+        </p>
+  </div>
+</div>
+<div id="prtContainer">
+    <h1>Polarization Ray Trace(PRT) Matrix</h1>
+    <div class="textContainer">
+            <p>
+            The Jones matrix can be extended into three Dimensions by calculating the directions of the propagation vector $k_{in}$, s-polarization direction $s_{in}$, p-polarization direction $p_{in}$, before the interface and the exiting propagation direction, s-direction and p-direction ($k_{out}, s_{out}, p_{out}$) and preforming a local to global transformation.  
+            </p>
+    </div>
+    <div class ="equtionContainer">
+            <p>
+                $$PRT = O_{out} \cdot J \cdot O^{-1}_{in}$$
+                $$PRT = \begin{pmatrix}s_{x_{out}} & p_{x_{out}} & k_{x_{out}} \\s_{y_{out}} & p_{y_{out}} & k_{y_{out}}\\ s_{z_{out}} & p_{z_{out}} & k_{z_{out}}\end{pmatrix}
+                         \cdot 
+                         \begin{pmatrix}S_{fresnel} & 0 & 0\\0 & P_{fresnel} & 0 \\ 0 & 0 & 1\end{pmatrix}
+                         \cdot
+                         \begin{pmatrix}s_{x_{in}} & s_{y_{in}} & s_{z_{in}} \\ p_{x_{in}} & p_{y_{in}} & p_{z_{in}} \\ k_{x_{in}} & k_{y_{in}} & k_{z_{in}}  \end{pmatrix}
+                $$
+            </p>
+      </div>
+    <div class="textContainer">
+            <p>
+            This method, takes the the Jones matrix in local s-p space and transforms it into the global coordinate system, such that the resulting PRT matrix describes the polarized effects of the surface as well as the geometrical change in the ray propageiont direction, and s and p polarization directions at the given interface.
+            The PRT matrices at each surface can then be multiplied together to represent the total polarization effects along a given ray path.  
+            </p>
+    </div>
+    <div class ="equtionContainer">
+            <p>
+                $$PRT_{total} = \prod_{surf=N,-1}^{1} PRT_n = P_N \cdot P_{N-1} ... \cdot P_2 \cdot P_1$$
+            </p>
+      </div>    
+</div>
+<div id="systemContainer">
+    <h1>Optical System Polarization Ray Trace Example</h1>
+    <div class="textContainer">
+        <p>
+        To illustrate the effectiveness of the above algorithm, lets run a polarization analysis on a simple optical system, and calculate how the optical surfaces will change the input polariztaion.
+        Trace a Collimated beam through a plano convex lens and off of a fold mirror to a detector
+        </p>
+    </div>
+    <div id="systemPlot1"></div>
+</div>
 
-  <p>Trace a Collimated beam through a plano convex lens and off of a fold mirror to a detector</p>
-  <div id="systemPlot1"></div>
-  <div id="systemPlot2"></div>
 
+<div id="analysisContainer">
+  <h1>System Analysis</h1>
   <div class = "mapContainer">
     <div id="diatPlot1"></div>
     <div id="diatPlot2"></div>
     <div id="diatPlot3"></div>
   </div>
+
 
   <div class = "mapContainer">
     <div id="diatTotalPlot1"></div>
@@ -78,17 +191,28 @@
     <div id="retTotalPlot2"></div>
     <div id="retTotalPlot3"></div>
   </div>
+</div>
+
+<div id="takeAwaysContainer">
+    <h1>General Principals of Frensel Aberrations</h1>
+</div>    
+
+<div id="thanksContainer">
+        <h1>Special Thanks To</h1>
+</div>  
+
+
 </div> 
 
-  <script src="./SVG.js"></script>
-  <script src="./math.js"></script>
-  <script src="./math_extend.js"></script>
+  <script src="./js/SVG.js"></script>
+  <script src="./js/math.js"></script>
+  <script src="./js/math_extend.js"></script>
 
-  <script src="./ray.js"></script>
-  <script src="./opticalSystem.js"></script>
-  <script src="./trace.js"></script>
-  <script src="./plot.js"></script>
-  <script src="./project.js"></script>
+  <script src="./js/ray.js"></script>
+  <script src="./js/opticalSystem.js"></script>
+  <script src="./js/trace.js"></script>
+  <script src="./js/plot.js"></script>
+  <script src="./js/project.js"></script>
 </body>
 
 </html>

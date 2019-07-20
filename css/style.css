@@ -12,6 +12,9 @@ a:hover{
 	font-weight: bold;
 	color: red;
 }
+img{
+	height: 300px;
+}
 
 body{
     background-color: blue;
@@ -65,7 +68,16 @@ header a{
     display: flex;
     width: 960px;
     height: 370px;
-  }
-  .mapContainer > div {
+}
+.mapContainer > div {
     flex: 1; /*grow*/
-  }
+}
+
+.fresnelPlotContainer {
+    display: flex;
+    width: 960px;
+    height: 370px;
+}
+.fresnelPlotContainer > div {
+    flex: 1; /*grow*/
+}
