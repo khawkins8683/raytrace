@@ -27,10 +27,14 @@
 // system ep
 // system exitp
 
+//Fresnel Aberration Plots
+    //Rs, Rp, Ts, Tp air glass
+PlotFresnelCoefficients('airGlassPlot',1.0,1.5,55);    
+    // Rs, Rp air Al
+PlotFresnelCoefficients('airAlPlot',1.0,math.complex(0.81257, 6.0481),55);     
+    //  diattenuation + retardance
 
-//   Test --- Trace 1
-let trace = new Trace();
-
+/// Ray Trace - Optical System
 
 //input parameters
 let sd = 1;//semi diamtere
@@ -49,6 +53,8 @@ let opticalSystem = new System( [surf1,surf2,surf3,surf4] );//{1:surf1, 2:surf2,
 let rayIn1 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
 let rayIn2 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
 let rayIn3 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+//make ray trace object
+let trace = new Trace();
 let raysOut = [
     trace.traceSystem(rayIn1, opticalSystem),
     trace.traceSystem(rayIn2, opticalSystem),
@@ -59,14 +65,16 @@ let rayField = new RayField(raysOut);
 let plotSys = new SystemPlot(70,'systemPlot1',300);
 plotSys.SystemYPlot(rayField, opticalSystem);
 
-
+console.log("ray Trace Start");
 rayGrid = new CollimatedWavefrontGrid(20,0.5,[0,0,0],[0,0,1],550);
 rayGrid.traceGrid(trace, opticalSystem);
+console.log("ray Trace Done");
 /*
 let plotSys2 = new SystemPlot(70,'systemPlot2',300);
 plotSys2.plotRayGrid(rayGrid, 1);
 */
-console.log("ray trace Done --- plotting");
+
+/*
 
 DiattenuationSurfaceMap("diatPlot1",rayGrid,1);
 DiattenuationSurfaceMap("diatPlot2",rayGrid,2);
@@ -83,3 +91,5 @@ RetardanceSurfaceMap("retPlot3",rayGrid,3);
 RetardanceTotalMap("retTotalPlot1",rayGrid,2);
 RetardanceTotalMap("retTotalPlot2",rayGrid,3);
 RetardanceTotalMap("retTotalPlot3",rayGrid,4);
+
+*/

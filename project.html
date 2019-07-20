@@ -8,6 +8,17 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript" async  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async>
+  </script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ 
+          tex2jax: {
+                 inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          },
+          TeX: { extensions: ["color.js"]}
+      });
+  </script>
   <link href="./style.css" rel="stylesheet">
 </head>
 
@@ -28,6 +39,18 @@
                 <hr>
             </header>  
 <div class="container">
+
+        <p>
+            When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+            $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+            $$\begin{pmatrix}a & b\\\ c & d\end{pmatrix}$$
+            $$\begin{pmatrix}J1 & J2\\J3 & j4\end{pmatrix}$$
+        <p>
+
+  <h1>Fresnel Aberrations</h1>
+  <div id="airGlassPlot"></div>
+  <div id="airAlPlot"></div>
+
   <p>Trace a Collimated beam through a plano convex lens and off of a fold mirror to a detector</p>
   <div id="systemPlot1"></div>
   <div id="systemPlot2"></div>

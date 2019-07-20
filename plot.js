@@ -217,3 +217,76 @@ RetardanceTotalMap = function(divID,rayGrid,surfaceID=1,title="Total Retardance 
       
     Plotly.newPlot(divID, data, layout, {showSendToCloud: true});    
 }
+
+
+////// ----- Fresnel aberration Plot
+PlotFresnelCoefficients = function (divID,n1=1.0,n2=1.5,steps=90){
+    RsData = {    
+        type: 'scatter',
+        x: [],
+        y: [],
+        mode: 'lines',
+        name: 'Rs',
+        line: {
+            color: 'rgb(219, 64, 82)',
+            width: 3
+        }
+    };
+    RpData = {    
+        type: 'scatter',
+        x: [],
+        y: [],
+        mode: 'lines',
+        name: 'Rp',
+        line: {
+            color: 'rgb(219, 64, 82)',
+            dash: 'dashdot',
+            width: 3
+        }
+    };
+    // Transmission
+    TsData = {    
+        type: 'scatter',
+        x: [],
+        y: [],
+        mode: 'lines',
+        name: 'Ts',
+        line: {
+            color: 'rgb(55, 128, 191)',
+            width: 3
+        }
+    };
+    TpData = {    
+        type: 'scatter',
+        x: [],
+        y: [],
+        mode: 'lines',
+        name: 'Tp',
+        line: {
+            color: 'rgb(55, 128, 191)',
+            dash: 'dashdot',
+            width: 3
+        }
+    };
+    // now loop through theta and calculate the fresnel coefficients
+    let ray = new RaySegment();
+    ray.n = {n1:n1, n2:n2};
+    ray.aoi = 0;
+
+    let x = [];
+    for(let i=0; i<steps; i++){
+        ray.aoi = (math.PI/2)*(i/steps);
+        x.push(ray.aoi);
+        //calculate y data
+        RsData.y.push( ray.Rs() );
+        RpData.y.push( ray.Rp() );        
+        TsData.y.push( ray.Ts() );
+        TpData.y.push( ray.Tp() );
+    }
+    RsData.x = x;
+    RpData.x = x;       
+    TsData.x = x;
+    TpData.x = x;
+    var data = [RsData,RpData,TsData,TpData];
+    Plotly.newPlot(divID, data, {}, {showSendToCloud: true});
+}
