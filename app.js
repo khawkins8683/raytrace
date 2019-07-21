@@ -1,118 +1,68 @@
-//TODO ---- DONE?
-// AOI for anit-parallel surfaces -  retro reflection - issue // think fix with mod pi/2
-// need more tests for q and prt surface and total -- but looking good 
-//  ability to use 0 as curvature
-//  ability to relfect or refract
-//  OpticalSystem object type
+let lastPostion = Math.round(this.scrollY);
+let $header = document.getElementsByTagName("header")[0];
+let top1 = 0;
+let scale1 = 1.75;
 
-//TODO ---- urgent
-//  diattenuation from PRT
-//  retardance from PRT
-//  Center the spherical surfaces at the vertex
-//  plot retardance + diattenuation over fov
-//  plot fresnel coefficients
-//      verify answers --- check sign convention for refractive index
-//  Organize to run server side
-//  ability to use negative radius of curvature
-        // i.e. calculate intersection with the front or the back of the sphere
-//  ability to intercept function surface
-//  ability to plot function
-//  rayField object -> obj rays have a Q matrix that will rotate back to normal jones coordinate systemfor ellipse plots
-//  double pole function
-// ray eField plot
-// system power
-// system ep
-// system exitp
+function scrollNavBar(current){
+    //first step 
+    let direction = lastPostion-current;
+    top1 = top1 + (1/scale1)*direction;
+    if(top1<-75){top1=-75}
+    else if(top1>0){top1=0}
+    $header.style.top = ( top1 )+"px";
+    lastPostion = current;
+}
 
+function getSectionPositions(scrollSectionIDs){
 
-//   Test --- Trace 1
-let trace = new Trace();
-let rayIn1 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500,[0,0,1],0,0,{n1:1,n2:1},0);
-let rayIn2 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500,[0,0,1],0,0,{n1:1,n2:1},0);
+	let heightList = [];
 
-//RayTrace #1 Refraction
-let sd = 1;//semi diamtere
-let type = "refract";
-let nGlass = 1.5;
-let nAir = 1;
-let surf1 = new Surface(nAir,nGlass,1,[0,0,2],1,[0,0,1],sd,type);
-let surf2 = new Surface(nGlass,nAir,0,[0,0,2],2,[0,0,1],sd,type);
-let surf3 = new Surface(nAir,nAir,0,[0,0,4],2,[0,0,1],sd,type);
-//let surf3 = new Surface(nAir,nGlass,1,[0,0,4],3,[0,0,1],sd,type);
-//let surf4 = new Surface(nGlass,nAir,0,[0,0,4],4,math.normalize([0,-0.6,1]),sd,type);
+	for(let i=0; i<scrollSectionIDs.length; i++){
+		//get the element offset width
+		let div = document.getElementById(scrollSectionIDs[i]);
+		heightList.push(div.offsetTop);
+	}
+	return heightList;
+}
 
-let opticalSystem = new System( [surf1,surf2,surf3/*,surf3,surf4*/] );//{1:surf1, 2:surf2, 3:surf3, 4:surf4};
-let rays = [
-    trace.traceSystem(rayIn1, opticalSystem),
-    trace.traceSystem(rayIn2, opticalSystem)
-];
-let rayField = new RayField(rays);
-
-/// create a new plot obj
-let plotSys = new SystemPlot(70,'systemPlot1',300);
-plotSys.SystemYPlot(rayField, opticalSystem);
-//test fresnel coefficients
-let testRay = rays[0].rayList[1];
-console.log("rs, rp",[testRay.rs(),  testRay.rp()]);
-console.log("Rs, Rp",[testRay.Rs(),  testRay.Rp()]);
-console.log("ts, tp",[testRay.ts(),  testRay.tp()]);
-console.log("Ts, Tp",[testRay.Ts(),  testRay.Tp()]);
-//.transmissionFactor
-console.log("Ts 2, Tp 2",[testRay.transmissionFactor()*testRay.ts()**2,  testRay.transmissionFactor()*testRay.tp()**2]);
-//test prt props
-console.log("K vector: ",math.multiply(testRay.PRT(),[0,0,1]),testRay.k);
-console.log("s vector: ",math.multiply(testRay.PRT(),testRay.sIn ),  math.multiply(testRay.sOutVector(), testRay.ts() ));
-console.log("p vector: ",math.multiply(testRay.PRT(),testRay.pIn ),  math.multiply(testRay.pOutVector(), testRay.tp() ));
-//polprops
-console.log("Diattenuation",testRay.diattenuation());
-console.log("Retardance", testRay.retardance());
-console.log("REFRction done \n\n");
-
-//Ray Trace #2 Reflection
-let rayIn = new RaySegment([0,0,0],math.normalize([0,0,1]),500,[0,0,1],0,0,{n1:1,n2:1},0);
-
-sd = 3;//semi diamtere
-type = "reflect";
-nAl = math.complex(0.81257, 6.0481);
-nAir = 1;
-let surfR1 = new Surface(nAir,nAl,0,[0,0,2],1,math.normalize([0.1,1,1]),sd,type);
-let surfR2 = new Surface(nAir,nAl,0,[0,-2,2],2,math.normalize([0,1.1,-1]),sd,type);
-//detector surface
-let surfR3 = new Surface(nAir,nAir,0,[0,-2,0],3,math.normalize([0,0,-1]),sd,"refract");
-let opticalSystemR = new System( [surfR1,surfR2,surfR3] );
-let raysReflected = [trace.traceSystem(rayIn, opticalSystemR)];
-let rayFieldReflected = new RayField(raysReflected);
-
-/// create a new plot obj
-let plotSysR = new SystemPlot(70,'systemPlot2',300);
-plotSysR.SystemYPlot(rayFieldReflected, opticalSystemR);
-
-testRay = raysReflected[0].rayList[1];
-console.log("rs, rp",[testRay.rs(),  testRay.rp()]);
-console.log("Rs, Rp",[testRay.Rs(),  testRay.Rp()]);
-console.log("ts, tp",[testRay.ts(),  testRay.tp()]);
-console.log("Ts, Tp",[testRay.Ts(),  testRay.Tp()]);
-//test prt props
-console.log("K vector: ",math.multiply(testRay.PRT(),[0,0,1]),testRay.k);
-console.log("s vector: ",math.multiply(testRay.PRT(),testRay.sIn ),  math.multiply(testRay.sOutVector(), testRay.rs() ));
-console.log("p vector: ",math.multiply(testRay.PRT(),testRay.pIn ),  math.multiply(testRay.pOutVector(), testRay.rp() ));
-//polprops
-console.log("Diattenuation",testRay.diattenuation());
-console.log("Retardance", testRay.retardance());
-console.log("Reflection done \n\n");
+function setNavScroll(scrollSectionIDs,heightList){
+        
+	let sec ="";
+	let li = null;
+	let scrollPos = Math.round(this.scrollY);
+	
+	//get the current section
+	for(let i = 0; i<scrollSectionIDs.length-1; i++){
+		
+		if(scrollPos>heightList[i]&&scrollPos<heightList[i+1]){
+			//add high light to nav sec
+			sec = scrollSectionIDs[i];
+			li  = document.getElementById('nav'+ sec);
+		}else if(scrollPos>heightList[heightList.length-1]){
+			sec = scrollSectionIDs[heightList.length-1];
+			li  = document.getElementById('nav'+ sec);
+		}
+	}
+    // add highlight to current section
+	for(let i = 0; i<scrollSectionIDs.length; i++){
+		if(scrollSectionIDs[i]===sec){
+            li.classList.add('navhighlight');
+		}else{
+			document.getElementById('nav'+ scrollSectionIDs[i]).classList.remove('navhighlight');
+		}
+	}
 
 
-//Ellipse Plot Test
-let ellipsePlot = new SystemPlot(70,'systemPlot3',300);
-ellipsePlot.ellipse(math.multiply(raysReflected[0].jonesMatrix(),[1,1]),[1,1]);
+}
 
-/*
-  <script src="http://mlweb.loria.fr/lalolib.js"></script>
-
-lab.do("X = rand(3,3)");	
-lab.do("svd(X)", function ( result ) {
-        console.log("The singular values are ",result); 
-});
-*/
-
+//now set the windows on scrole event
+window.addEventListener('scroll', function(){
+        // we round here to reduce a little workload
+        let current = Math.round(this.scrollY);
+        scrollNavBar(current);
+        let scrollSectionIDs = ['overviewContainer','jonesContainer','fresnelContainer','prtContainer','systemContainer','analysisContainer','takeAwaysContainer','thanksContainer'];
+        let heightList = getSectionPositions(scrollSectionIDs);
+        //add class to nav item if scroll bar is in each section       
+        setNavScroll(scrollSectionIDs,heightList)
+    });
 

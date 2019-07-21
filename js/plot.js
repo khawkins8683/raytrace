@@ -296,5 +296,16 @@ PlotFresnelCoefficients = function (divID,n1=1.0,n2=1.5,steps=90){
     TsData.x = x;
     TpData.x = x;
     var data = [RsData,RpData,TsData,TpData];
-    Plotly.newPlot(divID, data, {}, {showSendToCloud: true});
+
+    let layout = {
+        title: 'Frensen Intensity '+n1+' - '+n2,
+        xaxis: {
+          title: 'AOI (rad)'
+        },
+        yaxis: {
+          title: ''
+        }
+      };
+
+    Plotly.newPlot(divID, data, layout, {showSendToCloud: true});
 }

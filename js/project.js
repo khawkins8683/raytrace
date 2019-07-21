@@ -66,7 +66,7 @@ let plotSys = new SystemPlot(70,'systemPlot1',300,150);
 plotSys.SystemYPlot(rayField, opticalSystem);
 
 console.log("ray Trace Start");
-rayGrid = new CollimatedWavefrontGrid(20,0.5,[0,0,0],[0,0,1],550);
+rayGrid = new CollimatedWavefrontGrid(16,0.5,[0,0,0],[0,0,1],550);
 rayGrid.traceGrid(trace, opticalSystem);
 console.log("ray Trace Done");
 

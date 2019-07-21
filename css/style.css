@@ -2,20 +2,8 @@
 	margin: 0;
 	padding: 0;
 }
-.ulContainer{
-	width: 100%;
-	margin: 40px;
-}
-.container li{
-	margin: 10px 0;
-  }
-.container ul {
-    width: 70%;
-    margin: auto;
-}
-header ul li{	
-	list-style-type: none;
-}
+
+
 a{
 	text-decoration: none;
 }
@@ -33,7 +21,7 @@ img{
 body{
     background-color: blue;
 }
-
+/*header*/
 header{
 	opacity: 0.75;
 	position: fixed;
@@ -48,7 +36,7 @@ header div{
 	
 }
 header h1{
-	width: 40%;
+	width: 33%;
 	float: left;
 	text-align: left;
 	padding-left: 2%;
@@ -57,7 +45,7 @@ header h1{
     color: white;
 }
 header nav{
-	width: 50%;
+	width: 64%;
 	float: right;
 	text-align: right;
 	padding-top: 20px;
@@ -65,11 +53,38 @@ header nav{
 header ul li{
 	display:inline;
 	padding-right: 10px; 
+	list-style-type: none;
 }
 header a{
 	color: white;
+	padding: 0px;
+}
+.navhighlight{
+	font-size: 25px;
 }
 
+/*footer*/
+footer ul {
+	list-style-type: none;
+	font-weight: bold;
+}
+.footerout{
+	width: 100%;
+	background-color: blue;
+}
+.footerin{
+	width: 100%;
+	margin-top: 10px;
+	padding-top: 80px;
+	padding-bottom: 80px;
+	color: black;
+	text-align: center;
+}
+.footerin hr{
+	width: 20%;
+	margin: auto;
+}
+/*main*/
 .container{
     width: 960px;
     height: 100%;
@@ -89,7 +104,17 @@ header a{
 	line-height: 1.5;
 }
 
-
+.ulContainer{
+	width: 100%;
+	margin: 40px;
+}
+.container li{
+	margin: 10px 0;
+  }
+.container ul {
+    width: 70%;
+    margin: auto;
+}
 .mapContainer {
     display: flex;
     width: 960px;
@@ -123,4 +148,7 @@ header a{
 
 .sysPlotContainer > div {
 	margin: auto;
+}
+#thanksContainer{
+	padding-bottom: 40px;
 }
