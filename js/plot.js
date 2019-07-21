@@ -298,7 +298,7 @@ PlotFresnelCoefficients = function (divID,n1=1.0,n2=1.5,steps=90){
     var data = [RsData,RpData,TsData,TpData];
 
     let layout = {
-        title: 'Frensen Intensity '+n1+' - '+n2,
+        title: 'Fresnel Intensity '+n1+' - '+n2,
         xaxis: {
           title: 'AOI (rad)'
         },
