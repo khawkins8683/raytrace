@@ -47,7 +47,7 @@
     <a id="gotooverviewContainer"></a>
     <h1>Overview</h1>
     <div class="textContainer">
-            <p>Typically when dealling designing optical systems, 
+            <p>Typically when dealing designing optical systems, 
                 engineers rely on ray tracing to calculate the paths and phases of light inside of a system.
                 This method ignores much of the wave nature of the light except for the frequency or wavelength properties.
                 Polarization ray tracing aims to extend these methods by also including the effects of the waves geometry (Polarization), by the optical system.
@@ -56,10 +56,10 @@
     <div class="imgContainer"><img src="./Images/polarizedLight.png"></div>
     <div class="textContainer">
         <p>
-            Since light is a transverse wave it is driven forward by an oscilating electric (and magnetic) field.  This field can move in the vertical direction, horizontal direction, or at any angle in between.  
-            The electric field can even oscilate in a circular pattern if the movement in the x and y directions are out of sync.
-            The orientation and phase of the electric field oslication is the light's polarization.
-            This example will go throught the methodology and importance of Polarization in optical design.
+            Since light is a transverse wave it is driven forward by an oscillating electric (and magnetic) field.  This field can move in the vertical direction, horizontal direction, or at any angle in between.  
+            The electric field can even oscillate in a circular pattern if the movement in the x and y directions are out of sync.
+            The orientation and phase of the electric field oscillation is the light's polarization.
+            This example will go through the methodology and importance of Polarization in optical design.
         </p>
     </div>
 </div>
@@ -69,8 +69,8 @@
         <h1>Jones Matrix Calculus</h1>
         <div class="textContainer">
             <p>We think that the concept of polarized light was first observed in 1669 (Erasmus Bartholinus, Dutch) by viewing double refraction through calcite crystal.
-                For the next 200 + years much more observations and mathematical descriptions of polarized light were made (Malus Law ~1808, Fresnel Coeffiecients ~1830),
-                but it was not until 1941, that a rigorus description of the pheomina was concieved by R.C. Jones.  The American born physicist, methodology (now know as Jones Calculs),describes Polarized light with a complex two dimensional "Jones" vector, and describes the optical interaction of polarized light with optical componets using a complex 2 by 2 Jones Matrix.
+                For the next 200 + years much more observations and mathematical descriptions of polarized light were made (Malus Law ~1808, Fresnel Coefficients ~1830),
+                but it was not until 1941, that a rigorous description of the phenomena was conceived by R.C. Jones.  The American born physicist, methodology (now known as Jones Calculus), describes Polarized light with a complex two dimensional "Jones" vector, and describes the optical interaction of polarized light with optical components using a complex 2 by 2 Jones Matrix.
             </p>
         </div>
         <div class ="equtionContainer">
@@ -83,7 +83,7 @@
         <div class ="equtionContainer">
             <p>
             This calculus describes fully polarized coherent light and how its interactions. Jones vectors describe the electric field amplitude and phase.  A little later on (1943), Hans Mueller, developed an overlapping calculus to describe incoherent interactions in terms of intensities.
-            Though both methods should be used to get the complete polarization picture, we will focus on extending the Jones Calculus methods, so that they can be used durring ray tracing.
+            Though both methods should be used to get the complete polarization picture, we will focus on extending the Jones Calculus methods, so that they can be used during ray tracing.
             </p>
         </div>
 </div>
@@ -92,14 +92,14 @@
   <h1>Fresnel Aberrations</h1>
   <div class="textContainer">
       <p>
-      The amount of light that reflects and refracts off of an optical interface, depends on the incident polarization and can be calculated using the Fresnel Equations (~1830, Augustin-Jean Fresnel, French).  
-      The equations divide the incident wave into two componets, call S and P polarizations.  Where the S, polarized direction is perpendicular to the plane of refraction, and the p state is parallel to the plane of refraction.
+      The amount of light that reflects and refracts off an optical interface, depends on the incident polarization and can be calculated using the Fresnel Equations (~1830, Augustin-Jean Fresnel, French).  
+      The equations divide the incident wave into two components, call S and P polarizations.  Where the S, polarized direction is perpendicular to the plane of refraction, and the p state is parallel to the plane of refraction.
       </p>
   </div>
   <div class="imgContainer"><img src="./Images/sandp.jpg"></div>
   <div class="textContainer">
         <p>
-        These equations only depend on the incident ray angle and the refractive index on either side of the interface.  All of these values are readily available durring a ray trace.
+        These equations only depend on the incident ray angle and the refractive index on either side of the interface.  All of these values are readily available during a ray trace.
         </p>
   </div>
   <div class ="equtionContainer">
@@ -121,7 +121,7 @@
   </div> 
   <div class="textContainer">
         <p>
-        The Fresnel coefficients can be combined with the Jones calculus to create a description for how an optical surface in an optical system will effect the polarization of the light propagating through the system.
+        The Fresnel coefficients can be combined with the Jones calculus to create a description for how an optical surface in an optical system will affect the polarization of the light propagating through the system.
         </p>
   </div>
   <div class ="equtionContainer">
@@ -132,8 +132,8 @@
   </div>
   <div class="textContainer">
         <p>
-        Though these Jones matricies will describe the optical polarization effects, they are somewhat limited in their applications to Polarized Ray tracing.  This is because the Jones vector describes the electric field in terms of an x and y component.  This has the implicit assumption that the light is propagating the the z-direction.  
-        Since one of the main goals of ray tracing is to calculate the change in propagation direction due to optical interactions, this formalation is clearly inadiquate.  To apply this methodoly to three-D ray tracing, one must extend the Jones matrix into a three-D version.
+        Though these Jones matrices will describe the optical polarization effects, they are somewhat limited in their applications to Polarized Ray tracing.  This is because the Jones vector describes the electric field in terms of an x and y component.  This has the implicit assumption that the light is propagating in the z-direction.  
+        Since one of the main goals of ray tracing is to calculate the change in propagation direction due to optical interactions, this formulation is clearly inadequate.  To apply this methodology to three-D ray tracing, one must extend the Jones matrix into a three-D version.
         </p>
   </div>
 </div>
@@ -158,7 +158,7 @@
       </div>
     <div class="textContainer">
             <p>
-            This method, takes the the Jones matrix in local s-p space and transforms it into the global coordinate system, such that the resulting PRT matrix describes the polarized effects of the surface as well as the geometrical change in the ray propageiont direction, and s and p polarization directions at the given interface.
+            This method, takes the Jones matrix in local s-p space and transforms it into the global coordinate system, such that the resulting PRT matrix describes the polarized effects of the surface as well as the geometrical change in the ray propagation direction, and s and p polarization directions at the given interface.
             The PRT matrices at each surface can then be multiplied together to represent the total polarization effects along a given ray path.  
             </p>
     </div>
@@ -173,8 +173,8 @@
     <h1>Optical System Polarization Ray Trace Example</h1>
     <div class="textContainer">
         <p>
-        To illustrate the effectiveness of the above algorithm, lets run a polarization analysis on a simple optical system, and calculate how the optical surfaces will change the input polariztaion.
-        The optical system will comprise of two refractive glass surfaces, defining a plano convex lens, and an aluminum fold mirror that will redirect the light beam by 90 degrees into the detector.
+        To illustrate the effectiveness of the above algorithm, lets run a polarization analysis on a simple optical system, and calculate how the optical surfaces will change the input polarization.
+        The optical system will comprise of two refractive glass surfaces, defining a plano-convex lens, and an aluminum fold mirror that will redirect the light beam by 90 degrees into the detector.
         </p>
     </div>
     <div class="sysPlotContainer">
@@ -182,8 +182,8 @@
     </div>
     <div class="textContainer">
         <p>
-        A collimated ray set will be traced through the system, and will come to focus at the detector.    
-        This configuration will demonstrate how both refractive dielectric surfaces, a reflective metal surfaces, with a complex valued refractive index will effect polarized light.
+        A collimated ray set will be traced through the system and come to focus at the detector.    
+        This configuration will demonstrate how both refractive dielectric surfaces, a reflective metal surfaces, with a complex valued refractive index will affect polarized light.
         </p>
     </div>
 </div>
@@ -196,7 +196,7 @@
         <p>    
         Two quantities that are very important for optical designers to understand are diattenuation and retardance.  
         These values will describe the polarization aberrations of the system.  Polarization aberrations are polarization dependent deviations in both amplitude and phase from an ideal wave front.
-        The diattenuation will describe the amplitude deviation, and is defined as follows.
+        The diattenuation will describe the amplitude deviation and is defined as follows:
         </p>
     </div>
     <div class ="equtionContainer">
@@ -207,7 +207,7 @@
     <div class="textContainer">
             <p>
             Where $T_max$ is the maximum transmission and $T_min$ is the minimum transmission.   
-            The retardance will describe the polarization based phase dependence, and is defined as follows.
+            The retardance will describe the polarization-based phase dependence and is defined as follows:
             </p>
     </div>
     <div class ="equtionContainer">
@@ -217,15 +217,15 @@
     </div> 
     <div class="textContainer">
             <p>
-            Where $\lambda_1$ is the first eigen polarization value and $\lambda_2$ is the second eigen polarization mode.  *Note this definition assumes that the eigen polariztion states are perpendicular.
+            Where $\lambda_1$ is the first eigen polarization value and $\lambda_2$ is the second eigen polarization mode.  *Note this definition assumes that the eigen polarization states are perpendicular.
            </p>
     </div>
     <div class="textContainer">
             <p>
             To analyze this system the optical engineer will need to trace a grid of rays through the system.  At each surface a PRT matrix will be used to calculate the surface polarization effects.
-            Once the ray reaches the detector, all of the individual surface PRT matrices can be multiplied together to calculate the polarization effects along the entire ray path.
-            Then, the eigen values of the $PRT_total$ matrix, can be calculated.  Since it is a 3 by 3 matrix, their will be three eigen values.  By definition of the PRT matrix one of the eigen values will be 1, this corresponds to the propagation direction eigen value, which must be unity.
-            The other two eigen values will most likely be complex, and the difference in phase between the eigen values will calculate the retardance.  The maximum and minimum transmission values used to calculate the diattenuation can be acertained by taking the absolute square of the eigen values.  
+            Once the ray reaches the detector, all the individual surface PRT matrices can be multiplied together to calculate the polarization effects along the entire ray path.
+            Then, the eigen values of the $PRT_total$ matrix, can be calculated.  Since it is a 3 by 3 matrix, there will be three eigen values.  By definition of the PRT matrix one of the eigen values will be 1. This corresponds to the propagation direction eigen value, which must be unity.
+            The other two eigen values will most likely be complex, and the difference in phase between the eigen values will calculate the retardance.  The maximum and minimum transmission values used to calculate the diattenuation can be ascertained by taking the absolute square of the eigen values.  
             </p>
     </div>
 
@@ -272,7 +272,7 @@
 
 <div id="takeAwaysContainer">
     <a id="gototakeAwaysContainer"></a>
-    <h1>General Principals of Frensel Aberrations</h1>
+    <h1>General Principals of Fresnel Aberrations</h1>
     <div class = "ulContainer">
         <ul>
             <li>There will be no polarization aberrations at normal incidence</li>
@@ -299,7 +299,7 @@
     </div>  
     <div class="textContainer">
         <p>
-            For their work on the developement and analysis of the Polarization Ray Trace (PRT) matrix. Please see their papers on this subject for more information.
+            For their work on the development and analysis of the Polarization Ray Trace (PRT) matrix. Please see their papers on this subject for more information.
         </p>
         <div class="textContainer"><a href="https://www.osapublishing.org/ao/abstract.cfm?uri=ao-50-18-2855">Three-dimensional polarization ray-tracing calculus I: definition and diattenuation</a>
         </div>
@@ -342,7 +342,7 @@
   <script src="./js/opticalSystem.js"></script>
   <script src="./js/trace.js"></script>
   <script src="./js/plot.js"></script>
-  <!-- <script src="./js/project.js"></script> -->
+  <script src="./js/project.js"></script>
 </body>
 
 </html>
