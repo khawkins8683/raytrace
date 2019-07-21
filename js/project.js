@@ -8,21 +8,13 @@
 //  retardance from PRT
 //  plot retardance + diattenuation over fov
 
-//TODO ---- urgent
-//  2D eigen vector calculator
-// PRTCumulative(surfID)
-//  Center the spherical surfaces at the vertex
+//TODO ---- 
 
-//  plot fresnel coefficients
-//      verify answers --- check sign convention for refractive index
 //  Organize to run server side/nodeJS
 //  ability to use negative radius of curvature
         // i.e. calculate intersection with the front or the back of the sphere
 //  ability to intercept function surface
-//  ability to plot function
-//  rayField object -> obj rays have a Q matrix that will rotate back to normal jones coordinate systemfor ellipse plots
 //  double pole function
-// ray eField plot
 // system power
 // system ep
 // system exitp
@@ -65,10 +57,10 @@ let rayField = new RayField(raysOut);
 let plotSys = new SystemPlot(70,'systemPlot1',300,150);
 plotSys.SystemYPlot(rayField, opticalSystem);
 
-console.log("ray Trace Start");
+//console.log("ray Trace Start");
 rayGrid = new CollimatedWavefrontGrid(16,0.5,[0,0,0],[0,0,1],550);
 rayGrid.traceGrid(trace, opticalSystem);
-console.log("ray Trace Done");
+//console.log("ray Trace Done");
 
 
 rayGridSmall = new CollimatedWavefrontGrid(6,0.5,[0,0,0],[0,0,1],550);
