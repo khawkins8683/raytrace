@@ -75,7 +75,7 @@ header a{
     height: 100%;
     margin: auto;
     background-color: white;
-    padding-top: 200px;
+    padding-top: 100px;
 }
 .container h1{
 	text-align: center;
@@ -84,10 +84,11 @@ header a{
 .container h3{
 	text-align: center;
 }
-.container p{
+.container p,a{
 	padding: 40px;
 	line-height: 1.5;
 }
+
 
 .mapContainer {
     display: flex;
@@ -106,6 +107,15 @@ header a{
 .fresnelPlotContainer > div {
     flex: 1; /*grow*/
 }
+
+.labelContainer {
+    display: flex;
+    width: 960px;
+}
+.labelContainer > div {
+    flex: 1; /*grow*/
+}
+
 .sysPlotContainer{
     display: flex;
     width: 100%;

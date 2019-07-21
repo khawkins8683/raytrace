@@ -23,7 +23,7 @@ SystemPlot.prototype.ellipseGrid = function(rayGrid,jvIn=[1,0],steps=25){
     for(let i=0; i<rayGrid.rayGridOut.length; i++){
         for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
             let jvOut = math.multiply(rayGrid.rayGridOut[i][j].jonesMatrix(),jvIn);
-            let center = [1.75*i+1.5,1.75*j+1.6];
+            let center = [1.8*i+1.5,1.8*j+1.6];
             this.ellipse(jvOut,center,steps);
         }
     }

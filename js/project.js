@@ -74,13 +74,13 @@ console.log("ray Trace Done");
 rayGridSmall = new CollimatedWavefrontGrid(6,0.5,[0,0,0],[0,0,1],550);
 rayGridSmall.traceGrid(trace, opticalSystem);
 
-let ePlot1 = new SystemPlot(15,'ePlot1',350,350);
+let ePlot1 = new SystemPlot(18,'ePlot1',350,350);
 ePlot1.ellipseGrid(rayGridSmall, [1,0] );
 
-let ePlot2 = new SystemPlot(15,'ePlot2',350,350);
+let ePlot2 = new SystemPlot(18,'ePlot2',350,350);
 ePlot2.ellipseGrid(rayGridSmall, [0,1] );
 
-let ePlot3 = new SystemPlot(15,'ePlot3',350,350);
+let ePlot3 = new SystemPlot(18,'ePlot3',350,350);
 ePlot3.ellipseGrid(rayGridSmall, math.normalize([1,1]) );
 
 

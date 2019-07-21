@@ -41,12 +41,19 @@
 <div class="container">
 <div id="overviewContainer">
     <h1>Overview</h1>
+    <div class="textContainer">
+            <p>Typically when dealling designing optical systems, 
+                engineers rely on ray tracing to calculate the paths and phases of light inside of a system.
+                This method ignores much of the wave nature of the light except for the frequency or wavelength properties.
+                Polarization ray tracing aims to extend these methods by also including the effects of the waves geometry (Polarization), by the optical system.
+            </p>
+        </div>
     <div class="imgContainer"><img src="./Images/polarizedLight.png"></div>
     <div class="textContainer">
-        <p>Typically when dealling designing optical systems, 
-            engineers rely on ray tracing to calculate the paths and phases of light inside of a system.
-            This method ignores much of the wave nature of the light except for the frequency or wavelength properties.
-            Polarization ray tracing aims to extend these methods by also including the effects of the waves geometry (Polarization), by the optical system.
+        <p>
+            Since light is a transverse wave it is driven forward by an oscilating electric (and magnetic) field.  This field can move in the vertical direction, horizontal direction, or at any angle in between.  
+            The electric field can even oscilate in a circular pattern if the movement in the x and y directions are out of sync.
+            The orientation and phase of the electric field oslication is the light's polarization.
             This example will go throught the methodology and importance of Polarization in optical design.
         </p>
     </div>
@@ -242,11 +249,15 @@
 </div>
 
 <h3>Effects on the electric field</h3>
+<div class = "labelContainer">
+    <div><h3>Horizontal Input Polarization</h3></div>
+    <div><h3>Vertical Input Polarization</h3></div>
+    <div><h3> $45\textdegree$ Input Polarization</h3></div>
+</div>
 <div class = "mapContainer">
   <div id="ePlot1"></div>
   <div id="ePlot2"></div>
   <div id="ePlot3"></div>
-</div>
 </div>
 
 <div id="takeAwaysContainer">
