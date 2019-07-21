@@ -26,7 +26,7 @@
         <header>
                 <hr>
                 <div>
-                    <h1>Polarization Ray Tracing - Example</h1>
+                    <h1>Polarization Ray Tracing</h1>
                     <nav>
                         <ul>
                             <li id="navaboutme"><a href="#gotoaboutme">System</a></li>
@@ -41,7 +41,7 @@
 <div class="container">
 <div id="overviewContainer">
     <h1>Overview</h1>
-    <img src="./Images/polarizedLight.png">
+    <div class="imgContainer"><img src="./Images/polarizedLight.png"></div>
     <div class="textContainer">
         <p>Typically when dealling designing optical systems, 
             engineers rely on ray tracing to calculate the paths and phases of light inside of a system.
@@ -82,7 +82,7 @@
       The equations divide the incident wave into two componets, call S and P polarizations.  Where the S, polarized direction is perpendicular to the plane of refraction, and the p state is parallel to the plane of refraction.
       </p>
   </div>
-  <img src="./Images/sandp.jpg">
+  <div class="imgContainer"><img src="./Images/sandp.jpg"></div>
   <div class="textContainer">
         <p>
         These equations only depend on the incident ray angle and the refractive index on either side of the interface.  All of these values are readily available durring a ray trace.
@@ -124,7 +124,7 @@
   </div>
 </div>
 <div id="prtContainer">
-    <h1>Polarization Ray Trace(PRT) Matrix</h1>
+    <h1>Polarization Ray Trace (PRT) Matrix</h1>
     <div class="textContainer">
             <p>
             The Jones matrix can be extended into three Dimensions by calculating the directions of the propagation vector $k_{in}$, s-polarization direction $s_{in}$, p-polarization direction $p_{in}$, before the interface and the exiting propagation direction, s-direction and p-direction ($k_{out}, s_{out}, p_{out}$) and preforming a local to global transformation.  
@@ -158,34 +158,82 @@
     <div class="textContainer">
         <p>
         To illustrate the effectiveness of the above algorithm, lets run a polarization analysis on a simple optical system, and calculate how the optical surfaces will change the input polariztaion.
-        Trace a Collimated beam through a plano convex lens and off of a fold mirror to a detector
+        The optical system will comprise of two refractive glass surfaces, defining a plano convex lens, and an aluminum fold mirror that will redirect the light beam by 90 degrees into the detector.
         </p>
     </div>
-    <div id="systemPlot1"></div>
+    <div class="sysPlotContainer">
+        <div id="systemPlot1"></div>
+    </div>
+    <div class="textContainer">
+        <p>
+        A collimated ray set will be traced through the system, and will come to focus at the detector.    
+        This configuration will demonstrate how both refractive dielectric surfaces, a reflective metal surfaces, with a complex valued refractive index will effect polarized light.
+        </p>
+    </div>
 </div>
 
 
 <div id="analysisContainer">
-  <h1>System Analysis</h1>
+  <h1>System Polarization Analysis</h1>
+  <div class="textContainer">
+        <p>    
+        Two quantities that are very important for optical designers to understand are diattenuation and retardance.  
+        These values will describe the polarization aberrations of the system.  Polarization aberrations are polarization dependent deviations in both amplitude and phase from an ideal wave front.
+        The diattenuation will describe the amplitude deviation, and is defined as follows.
+        </p>
+    </div>
+    <div class ="equtionContainer">
+            <p>
+                $$Diattenuation = {T_max - T_min \over T_max - T_min}$$
+            </p>
+    </div> 
+    <div class="textContainer">
+            <p>
+            Where $T_max$ is the maximum transmission and $T_min$ is the minimum transmission.   
+            The retardance will describe the polarization based phase dependence, and is defined as follows.
+            </p>
+    </div>
+    <div class ="equtionContainer">
+            <p>
+                $$Retardance = arg(\lambda_1) - arg(\lambda_2)$$
+            </p>
+    </div> 
+    <div class="textContainer">
+            <p>
+            Where $\lambda_1$ is the first eigen polarization value and $\lambda_2$ is the second eigen polarization mode.  *Note this definition assumes that the eigen polariztion states are perpendicular.
+           </p>
+    </div>
+    <div class="textContainer">
+            <p>
+            To analyze this system the optical engineer will need to trace a grid of rays through the system.  At each surface a PRT matrix will be used to calculate the surface polarization effects.
+            Once the ray reaches the detector, all of the individual surface PRT matrices can be multiplied together to calculate the polarization effects along the entire ray path.
+            Then, the eigen values of the $PRT_total$ matrix, can be calculated.  Since it is a 3 by 3 matrix, their will be three eigen values.  By definition of the PRT matrix one of the eigen values will be 1, this corresponds to the propagation direction eigen value, which must be unity.
+            The other two eigen values will most likely be complex, and the difference in phase between the eigen values will calculate the retardance.  The maximum and minimum transmission values used to calculate the diattenuation can be acertained by taking the absolute square of the eigen values.  
+            </p>
+    </div>
+
+  <h3>Diattenuation due to Fresnel coefficients at each surface of the optical system</h3>
   <div class = "mapContainer">
     <div id="diatPlot1"></div>
     <div id="diatPlot2"></div>
     <div id="diatPlot3"></div>
   </div>
 
-
+  <h3>Total ray path diattenuation due to Fresnel coefficients at each surface of the optical system</h3>
   <div class = "mapContainer">
     <div id="diatTotalPlot1"></div>
     <div id="diatTotalPlot2"></div>
     <div id="diatTotalPlot3"></div>
   </div>
 
+  <h3>Retardance due to Fresnel coefficients at each surface of the optical system</h3>
   <div class = "mapContainer">
     <div id="retPlot1"></div>
     <div id="retPlot2"></div>
     <div id="retPlot3"></div>
   </div>
 
+  <h3>Total retardance due to Fresnel coefficients at each surface of the optical system</h3>
   <div class = "mapContainer">
     <div id="retTotalPlot1"></div>
     <div id="retTotalPlot2"></div>
@@ -193,12 +241,48 @@
   </div>
 </div>
 
+<h3>Effects on the electric field</h3>
+<div class = "mapContainer">
+  <div id="ePlot1"></div>
+  <div id="ePlot2"></div>
+  <div id="ePlot3"></div>
+</div>
+</div>
+
 <div id="takeAwaysContainer">
     <h1>General Principals of Frensel Aberrations</h1>
+    <div class = "ulContainer">
+        <ul>
+            <li>There will be no polarization aberrations at normal incidence</li>
+            <li>The retardance and diattenuation will increase with the angle of incidence</li>
+            <li>The larger the numerical aperture the more retardance and diattenuation variation</li>
+            <li>If either material at the optical interface has a complex valued refractive index, then there will be retardance</li>
+            <li>There will be no retardance at a dielectric interface (i.e. air-glass)</li>
+            <li>The larger the difference in refractive index values on either side of the larger the retardance will be</li>
+            <li>If a thin film coatings will generally decrease the diattenuation because they will increase both $r_s$ and $r_p$ or $t_s$ and $t_p$</li>
+            <li>If a thin film is used (even if it is dielectric), it will generally increase the retardance due to the interference effects</li>
+        </ul>
+    </div>
 </div>    
 
 <div id="thanksContainer">
-        <h1>Special Thanks To</h1>
+    <h1>Special Thanks To:</h1>
+    <div class = "ulContainer">
+            <ul>
+                <li>Dr. Russell Chipman</li>
+                <li>Dr. Garam Young</li>
+                <li>Dr. Steve McClain</li>
+            </ul>   
+    </div>  
+    <div class="textContainer">
+        <p>
+            For their work on the developement and analysis of the Polarization Ray Trace (PRT) matrix. Please see their papers on this subject for more information.
+        </p>
+        <div class="textContainer"><a href="https://www.osapublishing.org/ao/abstract.cfm?uri=ao-50-18-2855">Three-dimensional polarization ray-tracing calculus I: definition and diattenuation</a>
+        </div>
+        <div class="textContainer"><a href="https://www.osapublishing.org/ao/abstract.cfm?uri=ao-50-18-2866">Three-dimensional polarization ray-tracing calculus II: retardance</a>
+        </div>
+    </div>       
 </div>  
 
 

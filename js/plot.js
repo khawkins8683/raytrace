@@ -1,7 +1,7 @@
 
-function SystemPlot(scale,id,s){
+function SystemPlot(scale,id,sx=500,sy=500){
     this.plotScaleFactor = scale;//100
-    this.draw = SVG(id).size(s,s);
+    this.draw = SVG(id).size(sx,sy);
 }
 //Ellipses
 // ---- TODO - add arrow
@@ -14,11 +14,19 @@ SystemPlot.prototype.ellipse = function(jonesVector,center=[0,0],steps=25){
         points.push(math.add(center,point));
         theta += (2*math.PI/steps);
     }
-    console.log("Calculated Ellipse pts",points);
     this.draw.polyline(points)
         .fill('none')
         .stroke({ width: 1 })
     return points;
+}
+SystemPlot.prototype.ellipseGrid = function(rayGrid,jvIn=[1,0],steps=25){
+    for(let i=0; i<rayGrid.rayGridOut.length; i++){
+        for(let j=0; j<rayGrid.rayGridOut[i].length; j++){
+            let jvOut = math.multiply(rayGrid.rayGridOut[i][j].jonesMatrix(),jvIn);
+            let center = [1.75*i+1.5,1.75*j+1.6];
+            this.ellipse(jvOut,center,steps);
+        }
+    }
 }
 // Layout ------------------------------------------------------------------
 SystemPlot.prototype.plotRayGrid = function(rayGrid,offSet){

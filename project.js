@@ -69,23 +69,12 @@ console.log("ray Trace Start");
 rayGrid = new CollimatedWavefrontGrid(20,0.5,[0,0,0],[0,0,1],550);
 rayGrid.traceGrid(trace, opticalSystem);
 console.log("ray Trace Done");
+/*
+let plotSys2 = new SystemPlot(70,'systemPlot2',300);
+plotSys2.plotRayGrid(rayGrid, 1);
+*/
 
-
-rayGridSmall = new CollimatedWavefrontGrid(6,0.5,[0,0,0],[0,0,1],550);
-rayGridSmall.traceGrid(trace, opticalSystem);
-
-let ePlot1 = new SystemPlot(15,'ePlot1',350,350);
-ePlot1.ellipseGrid(rayGridSmall, [1,0] );
-
-let ePlot2 = new SystemPlot(15,'ePlot2',350,350);
-ePlot2.ellipseGrid(rayGridSmall, [0,1] );
-
-let ePlot3 = new SystemPlot(15,'ePlot3',350,350);
-ePlot3.ellipseGrid(rayGridSmall, math.normalize([1,1]) );
-
-
-
-
+/*
 
 DiattenuationSurfaceMap("diatPlot1",rayGrid,1);
 DiattenuationSurfaceMap("diatPlot2",rayGrid,2);
@@ -103,3 +92,4 @@ RetardanceTotalMap("retTotalPlot1",rayGrid,2);
 RetardanceTotalMap("retTotalPlot2",rayGrid,3);
 RetardanceTotalMap("retTotalPlot3",rayGrid,4);
 
+*/
