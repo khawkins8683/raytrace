@@ -3,7 +3,7 @@ function SystemPlot(scale,id,sx=500,sy=500){
     this.plotScaleFactor = scale;//100
     this.draw = SVG(id).size(sx,sy);
 }
-//Ellipses
+//Ellipses------------------------------------------------------------------------------
 // ---- TODO - add arrow
 SystemPlot.prototype.ellipse = function(jonesVector,center=[0,0],steps=25){
     let points = [];
@@ -29,48 +29,8 @@ SystemPlot.prototype.ellipseGrid = function(rayGrid,jvIn=[1,0],steps=25){
     }
 }
 // Layout ------------------------------------------------------------------
-SystemPlot.prototype.plotRayGrid = function(rayGrid,offSet){
-    let grid = rayGrid.rayGridOut;
-    for(let i = 0; i<grid.length; i++){
-        for(let j = 0; j<grid[i].length; j++){
-            this.drawRayPath(grid[i][j].rayList ,offSet);
-        }
-    }
-}
-SystemPlot.prototype.SurfacesYPlot = function(opticalSystem){
-    //First start by plotting the surfaces
-    //get the max off set
-    let surfs = opticalSystem.surfaces;
-    let offSet = opticalSystem.maxSemiDiamter();
-    for(let i = 0; i<surfs.length; i++){
-        if(surfs[i].curv == 0){
-            this.plotPlane(surfs[i].r, surfs[i].semiDiameter,surfs[i].k, offSet);
-        }else{
-            this.drawHalfCircle(surfs[i].r, 1/surfs[i].curv, offSet);
-        }
-    }
-}    
-
-SystemPlot.prototype.SystemYPlot = function(rayField,opticalSystem){
-    //First start by plotting the surfaces
-    //get the max off set
-    let surfs = opticalSystem.surfaces;
-    let offSet = opticalSystem.maxSemiDiamter();
-    for(let i = 0; i<surfs.length; i++){
-        if(surfs[i].curv == 0){
-            this.plotPlane(surfs[i].r, surfs[i].semiDiameter,surfs[i].k, offSet);
-        }else{
-            this.drawHalfCircle(surfs[i].r, 1/surfs[i].curv, offSet);
-        }
-    }
-    let paths = rayField.rayPaths;
-    for(let i = 0; i<paths.length; i++){
-        this.drawRayPath(paths[i].rayList ,offSet);
-    }
-}
-
+// RAYs -------------------------------------------------------------------------
 SystemPlot.prototype.drawRayPath = function(rayList,offSet){
-
     let points = [];
     for(let i=0; i<rayList.length; i++){
         let pt = rayList[i].r.slice(1,3).reverse();
@@ -83,38 +43,50 @@ SystemPlot.prototype.drawRayPath = function(rayList,offSet){
       .stroke({ width: 1 })
       //.move(0, offSet);
 }
-
-
-SystemPlot.prototype.drawHalfCircle = function(center,r,offSet){
- 
-    let CX = this.plotScaleFactor*center[2];
-    let CY = this.plotScaleFactor*(center[1] + offSet);
-    let R  = this.plotScaleFactor*r;
-    
-    //let path = draw.path("M"+(CX - R)+", "+CY+" a "+R+","+R+" 0 1,0 "+(R * 2)+",0");
-    let path = this.draw.path("M"+CX+", "+(CY-R)+" a "+R+","+R+" 0 1,0 0,"+(R * 2)); 
-    path.fill('none');
-    path.stroke({ color: '#f06', width: 4, linecap: 'round', linejoin: 'round' });
-    //path.move(0, offSet);
-}
-
-SystemPlot.prototype.plotPlane = function(center,semiDiam,eta,offSet){
-
-    let sign = [1,-1];
-    let points = [];
-    for(let i=0; i<sign.length; i++){
-        let pt = math.chain([-1*eta[2], eta[1]]).multiply(sign[i]*semiDiam).add(center.slice(1,3)).done();
-        //here add offset
-        pt[0] += offSet;
-        let ptOut = math.multiply(pt.reverse(), this.plotScaleFactor);  
-        points.push(ptOut);//get y-z values
+SystemPlot.prototype.plotRayGrid = function(rayGrid,offSet){
+    let grid = rayGrid.rayGridOut;
+    for(let i = 0; i<grid.length; i++){
+        for(let j = 0; j<grid[i].length; j++){
+            this.drawRayPath(grid[i][j].rayList ,offSet);
+        }
     }
-
+}
+//Surface --------------------------------------------------------------------------
+// make new plot function -- for all surfaces 
+// sample n times and use the sag function
+SystemPlot.prototype.drawSurface = function(surf,offSet,n=20){
+    ///
+    let points =[];
+    let perp = math.cross(surf.k,[1,0,0]);//y-z vals
+    //need to go from -semi diamter to + semidiamter
+    for(let i=0; i<=n; i++){
+        let rad = -1*surf.semiDiameter + i*2*(surf.semiDiameter/n);
+        let hpt = math.multiply(rad, perp).slice(1,3);
+        let sagpt = math.multiply(surf.sag(rad), surf.k).slice(1,3);//y-z vals
+        let ptTotal = math.chain( surf.r.slice(1,3)  ).add(hpt).add(sagpt).done();
+        ptTotal[0] += offSet;
+        points.push( math.multiply(ptTotal.reverse(),this.plotScaleFactor) );
+    }
     this.draw.polyline(points)
-      .fill('none')
-      .stroke({ color: '#f06', width: 4, linecap: 'round', linejoin: 'round' })
-      //.move(0, offSet);
-   
+        .fill('none')
+        .stroke({ color: '#f06', width: 4, linecap: 'round', linejoin: 'round' })
+    return points;
+}  
+
+ 
+//// MAIN -----------------------------------------------------------------------------------
+SystemPlot.prototype.SystemYPlot = function(rayField,opticalSystem){
+    //First start by plotting the surfaces
+    //get the max off set
+    let surfs = opticalSystem.surfaces;
+    let offSet = opticalSystem.maxSemiDiamter();
+    for(let i = 0; i<surfs.length; i++){
+        this.drawSurface(surfs[i],offSet);
+    }
+    let paths = rayField.rayPaths;
+    for(let i = 0; i<paths.length; i++){
+        this.drawRayPath(paths[i].rayList ,offSet);
+    }
 }
 //// MAPS ----------------------------------------------------
 //// MAPS ----------------------------------------------------
