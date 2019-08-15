@@ -86,7 +86,6 @@ rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
 rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
 let plotSys6 = new SystemPlot(70,'systemPlot6',300,300);
 plotSys6.SystemYPlot(rayOut, os);
-
 //+45
 sysa = math.normalize([0,1,1]);
 s1 = new Surface(nAir,nGlass,1,[0,0,1], 1, sysa,  sd,"refract","Convex Surface (L1)");
@@ -101,7 +100,6 @@ rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, o
 let plotSys7 = new SystemPlot(70,'systemPlot7',300,300);
 plotSys7.SystemYPlot(rayOut, os);
 //-45
-
 sysa = math.normalize([0,-1,1]);
 s1 = new Surface(nAir,nGlass,1,[0,0,1], 1, sysa,  sd,"refract","Convex Surface (L1)");
 s2 = new Surface(nGlass,nAir,0,math.chain(1).multiply(sysa).add([0,0,1]).done(), 2,sysa,  sd,"refract","Planar (L2)");
@@ -114,3 +112,51 @@ rayIn3 = new RaySegment(math.rotationMatrixXFixed(45*math.degree, [0,0,1], [0,0.
 rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
 let plotSys8 = new SystemPlot(70,'systemPlot8',300,300);
 plotSys8.SystemYPlot(rayOut, os);
+
+
+//Negative Curv Surfaces - --------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Negative Curv Surfaces - --------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Negative Curv Surfaces - --------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Negative Curv Surfaces - --------------------------------------------------------------------------------------------------------------------------------------------------------------
+//normal
+s1 = new Surface(nAir,nGlass,-1 ,[0,0,1], 1,[0,0,1],  sd,"refract","Convex Surface (L1)");
+s2 = new Surface(nGlass,nAir,0 ,[0,0,2], 2,[0,0,1],  sd,"refract","Planar (L2)");
+s3 = new Surface(nAir,nAir,  0 ,[0,0,4], 3,[0,0,1],2*sd,"refract","detector");
+//system
+os = new System( [s1,s2,s3] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys9 = new SystemPlot(70,'systemPlot9',300,300);
+plotSys9.SystemYPlot(rayOut, os);
+//+45
+sysa = math.normalize([0,1,1]);
+s1 = new Surface(nAir,nGlass,-1,[0,0,1], 1, sysa,  sd,"refract","Convex Surface (L1)");
+s2 = new Surface(nGlass,nAir,0,math.chain(1).multiply(sysa).add([0,0,1]).done(), 2,sysa,  sd,"refract","Planar (L2)");
+s3 = new Surface(nAir,nAir,  0,math.chain(3).multiply(sysa).add([0,0,1]).done(), 3,sysa,2*sd,"refract","detector");
+//system
+os = new System( [s1,s2,s3] );
+rayIn1 = new RaySegment(math.rotationMatrixXFixed(-1*45*math.degree, [0,0,1], [0,-0.5,0]) , sysa,500);
+rayIn2 = new RaySegment(math.rotationMatrixXFixed(-1*45*math.degree, [0,0,1], [0,0,0]),  sysa,500);
+rayIn3 = new RaySegment(math.rotationMatrixXFixed(-1*45*math.degree, [0,0,1], [0,0.5,0]),  sysa,500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys10 = new SystemPlot(70,'systemPlot10',300,300);
+plotSys10.SystemYPlot(rayOut, os);
+//-45
+sysa = math.normalize([0,-1,1]);
+s1 = new Surface(nAir,nGlass,-1,[0,0,1], 1, sysa,  sd,"refract","Convex Surface (L1)");
+s2 = new Surface(nGlass,nAir,0,math.chain(1).multiply(sysa).add([0,0,1]).done(), 2,sysa,  sd,"refract","Planar (L2)");
+s3 = new Surface(nAir,nAir,  0,math.chain(3).multiply(sysa).add([0,0,1]).done(), 3,sysa,2*sd,"refract","detector");
+//system
+os = new System( [s1,s2,s3] );
+rayIn1 = new RaySegment(math.rotationMatrixXFixed(45*math.degree, [0,0,1], [0,-0.5,0]) , sysa,500);
+rayIn2 = new RaySegment(math.rotationMatrixXFixed(45*math.degree, [0,0,1], [0,0,0]),  sysa,500);
+rayIn3 = new RaySegment(math.rotationMatrixXFixed(45*math.degree, [0,0,1], [0,0.5,0]),  sysa,500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys11 = new SystemPlot(70,'systemPlot11',350,350);
+plotSys11.SystemYPlot(rayOut, os);
+
+
+
+/// now relfections case
