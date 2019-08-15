@@ -12,6 +12,20 @@ math.rotationMatrix = function(theta){
     ];
     return matrixList;
 }
+math.rotationMatrixX = function(theta){
+    const matrixList = [
+        [1,0,0],
+        [0,math.cos(theta),-1*math.sin(theta)],
+        [0,math.sin(theta),math.cos(theta)]
+    ];
+    return matrixList;
+}
+math.rotationMatrixXFixed = function(theta,anchor,point){
+    let rotM = math.rotationMatrixX(theta);
+    let ptShift = math.subtract(point,anchor);
+    console.log(ptShift,rotM);
+    return math.chain(rotM).multiply(ptShift).add(anchor).done();
+}
 
 math.vectorAngle = function(v1,v2){
     return math.acos(math.multiply(v1,v2)/(math.norm(v1)*math.norm(v2)));

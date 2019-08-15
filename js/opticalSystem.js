@@ -56,10 +56,11 @@ function System(surfaces){
 }
 
 System.prototype.maxSemiDiamter = function(){
-    let max = this.surfaces[1];
+    let max = this.surfaces[1].semiDiameter;
     for(let i=1; i<this.surfaces.length; i++){
         let sd = this.surfaces[i].semiDiameter;
         if(sd>max) max = sd;
     }
-    return sd;
+    console.log("max",max);
+    return max;
 }

@@ -5,11 +5,15 @@ function Trace(){};
 //ToDO 
 // -- figure out [0,0,1], curv =-1 bug
     // --- I think this might happen with TIR or missed surface - d is complex
+    // --- AOI for reflection
+// TODO build a test suite    
+// Missed surface status
 //  -- make the trace object less contrived
 //  -- make an eigen vector calculator
 //  -- make an svd or polar decomposition function
 //  -- set up trace so that we can get back to z k vector but not have this inside the Q matrix --- geometrical transformation 
 // -- place the surface at the vertex no the center of the circle
+// -- bug with semiDiamter > 1
 
 Trace.prototype.traceSurface = function(ray,surf){
     //First calculate ray intercept & aoi
@@ -24,6 +28,11 @@ Trace.prototype.traceSurface = function(ray,surf){
         d = this.sphereInterceptDistance(ray.k,ray.r, center, 1/surf.curv);
         newR = math.add(ray.r, math.multiply(ray.k,d));
         eta = math.chain(center).subtract( newR ).normalize().multiply(-1*math.sign(surf.curv) ).done();
+        console.log("dist ",d);
+        console.log("Eta",eta);
+        console.log("center",center);
+        console.log("newR",newR);
+        console.log("c-r",math.subtract(center,newR));
     }
     //now make new ray segment -- with kIN to get the SIN and PIn vectors -- Important
     let newRay = new RaySegment(newR, ray.k, ray.lambda, eta);
@@ -36,10 +45,14 @@ Trace.prototype.traceSurface = function(ray,surf){
     newRay.d = d;
 
     //now calculate newK 
-    //switch here for reflect or refract surface
-    
+    //switch here for reflect or refract surface    
     if(surf.type == "refract"){
-        newRay.k = this.refract3D(surf.n1, surf.n2, eta, ray.k);
+        let newk = this.refract3D(surf.n1, surf.n2, eta, ray.k);
+        if(typeof newk == "number") {
+            //call reflect 3D if we want the ray to TIR
+            newRay.status = newk;//returns stop status
+        }
+        newRay.k = newk;
     }else{
         newRay.k = this.reflect3D(eta, ray.k);
     }    
@@ -54,6 +67,7 @@ Trace.prototype.traceSystem = function(ray,system){
         let newRay = this.traceSurface(rayCurrent,system.system[surfId]);
         rayPath.push(newRay);
         rayCurrent = newRay;
+        if(rayCurrent.status<0) break;
       }
     let pathObj = new RayPath(rayPath);
     return pathObj;
@@ -71,15 +85,22 @@ Trace.prototype.refract3D = function(n1,n2,eta,kin){
     let metaXk = math.cross(math.multiply(eta,-1),kin);
 
     let factor1 = math.multiply(mu,math.cross(eta,metaXk));
-    let factor2 = math.multiply(eta, math.sqrt(1-((mu**2)*math.norm(etaXk)**2)));
-
+    let g1 = ((mu**2)*math.norm(etaXk)**2);
+    //if g1>1 then we have TIR and kill the ray
+    if(g1>1) return -2;
+    let factor2 = math.multiply(eta, math.sqrt(1-g1));
+    console.log("3D refraction  ---  g1",factor1,factor2,((mu**2)*math.norm(etaXk)**2));
     return math.subtract(factor1,factor2);
 }
 Trace.prototype.reflect3D = function(eta,kIn){
     //Reflect k accross eta
+    //eta = math.multiply(eta,-1);
     let k = math.multiply(kIn,-1);
     let pLen = 2*math.multiply(eta,k);
-    return math.chain(eta).multiply(pLen).subtract(k).done();
+    console.log("pLen",pLen);
+    let kRef = math.chain(pLen).multiply(eta).subtract(k).done();
+    console.log('kRef, kIn',kRef,k);
+    return kRef;
 } 
 
 //------Intercepts-------

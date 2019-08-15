@@ -24,6 +24,7 @@ function RaySegment(r=[0,0,0],k=[0,0,1],lambda=550,eta=[0,0,1],d=0,surfID=0,nObj
     //this.n = {n1:n1,n2:n2};
     this.aoi = aoi;
     this.type = type;//either reflect or refract
+    this.status=1;//1>alive -1=> missed -2 => TIR
 }
 //OPL Calculation
 RaySegment.prototype.OPL = function(){
