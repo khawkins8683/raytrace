@@ -23,7 +23,6 @@ math.rotationMatrixX = function(theta){
 math.rotationMatrixXFixed = function(theta,anchor,point){
     let rotM = math.rotationMatrixX(theta);
     let ptShift = math.subtract(point,anchor);
-    console.log(ptShift,rotM);
     return math.chain(rotM).multiply(ptShift).add(anchor).done();
 }
 

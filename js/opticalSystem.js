@@ -61,6 +61,5 @@ System.prototype.maxSemiDiamter = function(){
         let sd = this.surfaces[i].semiDiameter;
         if(sd>max) max = sd;
     }
-    console.log("max",max);
     return max;
 }
