@@ -62,7 +62,7 @@ SystemPlot.prototype.drawSurface = function(surf,offSet,n=20){
     for(let i=0; i<=n; i++){
         let rad = -1*surf.semiDiameter + i*2*(surf.semiDiameter/n);
         let hpt = math.multiply(rad, perp).slice(1,3);
-        let sagpt = math.multiply(surf.sag(rad), surf.k).slice(1,3);//y-z vals
+        let sagpt = math.multiply(surf.sag(), surf.k).slice(1,3);//y-z vals
         let ptTotal = math.chain( surf.r.slice(1,3)  ).add(hpt).add(sagpt).done();
         ptTotal[0] += offSet;
         points.push( math.multiply(ptTotal.reverse(),this.plotScaleFactor) );

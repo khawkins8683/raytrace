@@ -2,7 +2,7 @@
 
 //set up a bi convex lens
 //optical interactions
-let trace = new Trace();
+//let trace = new Trace();
 let nAir = 1.0;
 let nGlass = 1.5;
 let sd = 1;
@@ -19,25 +19,35 @@ let s1,s2,s3,os,rayIn,rayIn1,rayIn2,rayIn3,rayOut;
 //Refract----------------------------------------
 
 //normal ----------------
-s1 = new Surface(nAir,nGlass,0 ,[0,0,1], 1,[0,0,1],  sd,"refract","Convex Surface (L1)");
-s2 = new Surface(nGlass,nAir,0 ,[0,0,3], 2,[0,0,1],  sd,"refract","Convex Surface (L2)");
-s3 = new Surface(nAir,nAir,  0 ,[0,0,4], 3,[0,0,1],2*sd,"refract","detector");
+s1 = new Plane();
+s1.init(nAir, nGlass,[0,0,1], [0,0,1],  sd,"refract",1,"Convex Surface (L1)");
+s2 = new Plane();
+s2.init(nGlass,nAir, [0,0,3], [0,0,1],  sd,"refract",2,"Convex Surface (L2)");
+s3 = new Plane();
+s3.init(nAir,  nAir, [0,0,4], [0,0,1],2*sd,"refract",3,"detector");
 //system
 os = new System( [s1,s2,s3] );
 rayIn = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
-rayOut = new RayField([trace.traceSystem(rayIn, os)]);
+rayOut = new RayField([os.traceSystem(rayIn)]);
 let plotSys1 = new SystemPlot(70,'systemPlot1',300,300);
 plotSys1.SystemYPlot(rayOut, os);
+
+
+
 //Planar Surfaces + 45 -------------------
-s1 = new Surface(nAir,nGlass,0 ,[0,0,1], 1,math.normalize([0,1,1]),  sd,"refract","Convex Surface (L1)");
-s2 = new Surface(nGlass,nAir,0 ,[0,0,3], 2,math.normalize([0,1,1]),  sd,"refract","Convex Surface (L2)");
-s3 = new Surface(nAir,nAir,  0 ,[0,0,4], 3,[0,0,1],2*sd,"refract","detector");
+s1 = new Plane();
+s1.init(nAir,nGlass,[0,0,1],math.normalize([0,1,1]),  sd,"refract",1,"Convex Surface (L1)");
+s2 = new Plane();
+s2.init(nGlass,nAir,[0,0,3],math.normalize([0,1,1]),  sd,"refract",2,"Convex Surface (L2)");
+s3 = new Plane();
+s3.init(nAir,nAir,  [0,0,4],[0,0,1],2*sd,"refract",3,"detector");
 //system
 os = new System( [s1,s2,s3] );
 rayIn = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
-rayOut = new RayField([trace.traceSystem(rayIn, os)]);
+rayOut = new RayField([os.traceSystem(rayIn)]);
 let plotSys2 = new SystemPlot(70,'systemPlot2',300,300);
 plotSys2.SystemYPlot(rayOut, os);
+/*
 //Planar Surfaces - 45-------------------------
 s1 = new Surface(nAir,nGlass,0 ,[0,0,1], 1,math.normalize([0,-1,1]),  sd,"refract","Convex Surface (L1)");
 s2 = new Surface(nGlass,nAir,0 ,[0,0,3], 2,math.normalize([0,-1,1]),  sd,"refract","Convex Surface (L2)");
@@ -213,12 +223,22 @@ rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, o
 let plotSys16 = new SystemPlot(70,'systemPlot16',300,300);
 plotSys16.SystemYPlot(rayOut, os);
 //-45
-s1 = new Surface(nAir,nGlass,-0.25 , [0,0,2],1, math.normalize([0,1,1]),  sd,"reflect","Convex Surface (L1)");
+s1 = new Surface(nAir,nGlass,-0.15 , [0,0,2],1, math.normalize([0,1,1]),  sd,"reflect","Convex Surface (L1)");
 s2 = new Surface(nAir,nAir,  0 ,[0,-2,2], 3,[0,-1,0],2*sd,"refract","detector");
 os = new System( [s1,s2] );
 rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
 rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
 rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
-rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+
+rayIn4 = new RaySegment([0,-0.25,0],math.normalize([0,0,1]),500);
+rayIn5 = new RaySegment([0,0.1,0],math.normalize([0,0,1]),500);
+rayIn6 = new RaySegment([0,0.25,0],math.normalize([0,0,1]),500);
+
+rayOut = new RayField([
+    trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os),
+    trace.traceSystem(rayIn4, os),trace.traceSystem(rayIn5, os),trace.traceSystem(rayIn6, os)
+]);
 let plotSys17 = new SystemPlot(70,'systemPlot17',300,300);
 plotSys17.SystemYPlot(rayOut, os);
+
+*/
