@@ -159,4 +159,66 @@ plotSys11.SystemYPlot(rayOut, os);
 
 
 
-/// now relfections case
+/// now relfections case --- positive
+//normal
+s1 = new Surface(nAir,nGlass,0.5 ,[0,0,1], 1,[0,0,1],  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,0,0], 3,[0,0,-1],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys12 = new SystemPlot(70,'systemPlot12',300,300);
+plotSys12.SystemYPlot(rayOut, os);
+//+45
+s1 = new Surface(nAir,nGlass,0.25 , [0,0,2],1, math.normalize([0,-1,1]),  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,2,2], 3,[0,1,0],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys13 = new SystemPlot(70,'systemPlot13',300,300);
+plotSys13.SystemYPlot(rayOut, os);
+//-45
+s1 = new Surface(nAir,nGlass,0.25 , [0,0,2],1, math.normalize([0,1,1]),  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,-2,2], 3,[0,-1,0],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys14 = new SystemPlot(70,'systemPlot14',300,300);
+plotSys14.SystemYPlot(rayOut, os);
+
+/// now relfections case --negative
+//normal
+s1 = new Surface(nAir,nGlass,-0.5 ,[0,0,1], 1,[0,0,1],  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,0,0], 3,[0,0,-1],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys15 = new SystemPlot(70,'systemPlot15',300,300);
+plotSys15.SystemYPlot(rayOut, os);
+//+45
+s1 = new Surface(nAir,nGlass,-0.25 , [0,0,2],1, math.normalize([0,-1,1]),  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,2,2], 3,[0,1,0],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys16 = new SystemPlot(70,'systemPlot16',300,300);
+plotSys16.SystemYPlot(rayOut, os);
+//-45
+s1 = new Surface(nAir,nGlass,-0.25 , [0,0,2],1, math.normalize([0,1,1]),  sd,"reflect","Convex Surface (L1)");
+s2 = new Surface(nAir,nAir,  0 ,[0,-2,2], 3,[0,-1,0],2*sd,"refract","detector");
+os = new System( [s1,s2] );
+rayIn1 = new RaySegment([0,-0.5,0],math.normalize([0,0,1]),500);
+rayIn2 = new RaySegment([0,0,0],math.normalize([0,0,1]),500);
+rayIn3 = new RaySegment([0,0.5,0],math.normalize([0,0,1]),500);
+rayOut = new RayField([trace.traceSystem(rayIn1, os),trace.traceSystem(rayIn2, os),trace.traceSystem(rayIn3, os)]);
+let plotSys17 = new SystemPlot(70,'systemPlot17',300,300);
+plotSys17.SystemYPlot(rayOut, os);
