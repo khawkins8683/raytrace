@@ -60,9 +60,9 @@ SystemPlot.prototype.drawSurface = function(surf,offSet,n=20){
     let perp = math.cross(surf.k,[1,0,0]);//y-z vals
     //need to go from -semi diamter to + semidiamter
     for(let i=0; i<=n; i++){
-        let rad = -1*surf.semiDiameter + i*2*(surf.semiDiameter/n);
+        let rad = -1*surf.aperture.semiDiameter + i*2*(surf.aperture.semiDiameter/n);
         let hpt = math.multiply(rad, perp).slice(1,3);
-        let sagpt = math.multiply(surf.sag(), surf.k).slice(1,3);//y-z vals
+        let sagpt = math.multiply(surf.sag(rad), surf.k).slice(1,3);//y-z vals
         let ptTotal = math.chain( surf.r.slice(1,3)  ).add(hpt).add(sagpt).done();
         ptTotal[0] += offSet;
         points.push( math.multiply(ptTotal.reverse(),this.plotScaleFactor) );
